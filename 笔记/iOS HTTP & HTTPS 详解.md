@@ -143,6 +143,11 @@ RFC7231里定义了HTTP方法的几个性质：
 - 头部信息压缩（header compression）：压缩由于HTTP无状态而导致必须重复传送的信息
 - 服务器推送（server push）：服务器可以未经允许向客户端发送消息
 
+## 2. HTTPS 协议详解
+#### 2.1 简介
+
+#### 2.2 通信过程
+![-w400](https://github.com/RickeyBoy/MarkdownPhotos/blob/master/iOS%20notes/TSL%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B.png?raw=true)
 
 ## 参考资料
 - [HTTP 协议入门 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2016/08/http.html)
