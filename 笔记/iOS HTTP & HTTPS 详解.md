@@ -20,7 +20,7 @@
 #### 1.4 客户端请求报文 · 消息结构
 
 **四部分**：请求行（request line）、请求头部（header）、空行、请求数据
-![-w500](https://github.com/RickeyBoy/MarkdownPhotos/blob/master/iOS%20notes/HTTP%E5%AE%A2%E6%88%B7%E7%AB%AF%E8%AF%B7%E6%B1%82%E6%8A%A5%E6%96%87.png?raw=true)
+![-w500](http://ac-HSNl7zbI.clouddn.com/fkSACKUoXm9h2QikTkLToJ2cUvdX22fHEQzX2HGS.jpg)
 
 **实例**
 
@@ -147,7 +147,7 @@ RFC7231里定义了HTTP方法的几个性质：
 #### 2.1 简介
 
 #### 2.2 通信过程
-![-w400](https://github.com/RickeyBoy/MarkdownPhotos/blob/master/iOS%20notes/TSL%E9%80%9A%E4%BF%A1%E8%BF%87%E7%A8%8B.png?raw=true)
+![-w400](http://ac-HSNl7zbI.clouddn.com/7JyzBSytrLG58pYJfEf8OXQ3OshXhX8nG4GukYFb.jpg)
 
 ## 参考资料
 - [HTTP 协议入门 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2016/08/http.html)
