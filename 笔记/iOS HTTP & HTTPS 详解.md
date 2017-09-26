@@ -131,6 +131,7 @@ RFC7231里定义了HTTP方法的几个性质：
 
 **CONNECT 持久连接 & Pipeline 管道**
 在HTTP 1.1中引入了`持久连接（persistent connection）`，即TCP默认不关闭（在之前的版本中，一个请求被处理完会断开连接），可以被多个请求复用。
+
 - `Connection: keep-alive` 默认状态
 - `Connection: close` 客户端最后一个请求时会要求服务器关闭TCP连接
 - HTTP 1.1 在persistent connection基础上还引入了`管道（pipeline）`机制。即在一个TCP连接上，客户端可以一次发送多个请求（因为有了persistent connection之后不用每个请求之后都断开连接）。
