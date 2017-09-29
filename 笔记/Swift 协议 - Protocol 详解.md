@@ -45,8 +45,30 @@
     - Expressive Syntax 丰富的语法
     - Extensibility 可拓展性：可继承、可重写等等
 
+#### Classes 的问题：
+1. Implicit Sharing 隐式共享: 
+
+![-w100](http://ac-HSNl7zbI.clouddn.com/sdLriPomzMIjCbp1eHEfMCYyfkpYwfgkSdHoSrpo.jpg)
+
+可能会导致大量保护性拷贝（Defensive Copy），导致效率降低；也有可能发生竞争条件（race condition），出现不可预知的错误；为了避免race condition，需要使用锁（Lock），但是这更会导致代码效率降低，并且有可能导致死锁（Dead Lock）
+
+2. Inheritance All 全部继承：
+
+由于继承时，子类将继承父类全部的属性，所以有可能导致子类过于庞大，逻辑过于复杂。尤其是当父类具有存储属性（stored properties）的时候，子类必须全部继承，并且小心翼翼得初始化，避免损坏父类中的逻辑。如果需要重写（override）父类的方法，则必须要小心思考如何重写以及何时重写。
+
+3. Lost Type Relationships 不能反应类型关系：
+
+![-w200](http://ac-HSNl7zbI.clouddn.com/66GlgQgMNwhd9GQTCoETyFr54Lewk3d2szKOMNk6.jpg)
+
+上图中，两个类（Label、Number）拥有相同的父类（Ordered），但是在 Number 中调用 Order 类必须要使用强制解析（as！）来判断 Other 的属性，这样做既不优雅，也非常容易出Bug（如果 Other 碰巧为Label类）
+
+
 ## protocol oriented programming 面向协议编程
 > 面向协议编程的优点
 
 #### 解耦
+
+#### Strong Type Safety 类型安全
+
+#### Code Abstraction 代码抽象
 
