@@ -8,7 +8,7 @@
 - 默认端口为80
 
 #### 1.2 通信流程
-![-w300](http://ac-HSNl7zbI.clouddn.com/nTUepWgzc8sNoiJwIAf5h216HAACExoeAu1WogRL.jpg)
+<img src="http://ac-HSNl7zbI.clouddn.com/nTUepWgzc8sNoiJwIAf5h216HAACExoeAu1WogRL.jpg" width="300">
 
 #### 1.3 HTTP 特点
 - 无连接：限制每次连接只能处理一个请求，服务器处理完客户的请求，并收到客户的应答后，即断开连接。采用这种方式可以节省传输时间。（在HTTP 1.1即以后不再是这样）
@@ -20,7 +20,8 @@
 #### 1.4 客户端请求报文 · 消息结构
 
 **四部分**：请求行（request line）、请求头部（header）、空行、请求数据
-![-w500](http://ac-HSNl7zbI.clouddn.com/fkSACKUoXm9h2QikTkLToJ2cUvdX22fHEQzX2HGS.jpg)
+<img src="http://ac-HSNl7zbI.clouddn.com/fkSACKUoXm9h2QikTkLToJ2cUvdX22fHEQzX2HGS.jpg" width="500">
+
 
 **实例**
 
@@ -159,7 +160,7 @@ RFC7231里定义了HTTP方法的几个性质：
 上述三点是整个 HTTPS 的核心，整个SSL／TLS技术都是为了实现这三点。所以牢记这三点，理解下面SSL／TLS原理，以及HTTPS的整个通信过程，就会更有条理。
 
 #### 2.3 SSL/TLS 原理
-![-w400](http://ac-HSNl7zbI.clouddn.com/iuVAp4jI0bkjNLgxJ7owVX4xvuiJioot2yI2WtjG.jpg)
+<img src="http://ac-HSNl7zbI.clouddn.com/iuVAp4jI0bkjNLgxJ7owVX4xvuiJioot2yI2WtjG.jpg" width="400">
 
 - 对称加密：
     - 加解密使用相同密钥。
@@ -177,7 +178,7 @@ RFC7231里定义了HTTP方法的几个性质：
     - 在访问一个服务器时，服务器发送数字证书，客户端验证证书真实性，确保服务器可信，从而**实现身份认证**。
 
 #### 2.4 通信过程
-![-w400](http://ac-HSNl7zbI.clouddn.com/7JyzBSytrLG58pYJfEf8OXQ3OshXhX8nG4GukYFb.jpg)
+<img src="http://ac-HSNl7zbI.clouddn.com/7JyzBSytrLG58pYJfEf8OXQ3OshXhX8nG4GukYFb.jpg" width="400">
 
 - A：客户端请求
     - 支持的协议版本（如 TLS 1.0）
