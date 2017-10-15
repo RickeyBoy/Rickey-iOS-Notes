@@ -6,9 +6,9 @@
 ### 单例是什么？
 单例模式（Singleton Pattern）是最简单的设计模式之一。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。这种模式涉及到一个单一的类，该类负责创建自己的对象，同时确保只有单个对象被创建。
 
-![-w200](http://ac-HSNl7zbI.clouddn.com/D2ErxUYP5HxTVE2mPV8vBobUxlOWdoNKkN5OVdO6.jpg)
+<img src="http://ac-HSNl7zbI.clouddn.com/D2ErxUYP5HxTVE2mPV8vBobUxlOWdoNKkN5OVdO6.jpg" width="200">
 
-![-w300](http://ac-HSNl7zbI.clouddn.com/LP3b1q4RrOrmmoAuVUir6lA0Gsrk52KVvS2Wh3Hf.jpg)
+<img src="http://ac-HSNl7zbI.clouddn.com/LP3b1q4RrOrmmoAuVUir6lA0Gsrk52KVvS2Wh3Hf.jpg" width="300">
 
 基本要求：
 - 只能有一个实例。
