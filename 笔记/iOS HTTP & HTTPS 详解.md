@@ -204,6 +204,8 @@ RFC7231里定义了HTTP方法的几个性质：
     - 用三个随机数，生成会话密钥（session key）
     - 将会话密钥（session key）用于对称加密，**实现内容加密**
 
+## 3.  ATS - App Transport Security
+
 
 ## 参考资料
 - [HTTP 协议入门 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2016/08/http.html)
