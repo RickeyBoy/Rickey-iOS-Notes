@@ -121,9 +121,9 @@ Server: Apache 0.84
 | 8 | TRACE | 回显服务器收到的请求，主要用于测试或诊断。 |
 
 **方法的性质**
-征求意见稿（Request For Comments，缩写为`RFC`），是由互联网工程任务组（IETF）发布的一系列备忘录。文件收集了有关互联网相关信息，以及UNIX和互联网社区的软件文件，以编号排定。目前RFC文件是由互联网协会（ISOC）赞助发行。
+征求意见稿（Request For Comments，缩写为`RFC`），是由互联网工程任务组（IETF）发布的一系列备忘录。文件收集了有关互联网相关信息，以及UNIX和互联网社区的软件文件，以编号排定。目前 RFC 文件是由互联网协会（ISOC）赞助发行。
 
-RFC7231里定义了HTTP方法的几个性质：
+RFC7231 里定义了HTTP方法的几个性质：
 1. Safe - 安全：一个方法的语义在本质上是「只读」的，那么这个方法就是安全的。GET、HEAD、OPTIONS、TRACE
 2. Idempotent - 幂等：同一个请求方法执行多次和仅执行一次的效果完全相同。安全方法 + PUT、DELETE
 3. Cacheable - 可缓存性：一个方法是否可以被缓存。GET、HEAD、某些情况下的POST
@@ -203,8 +203,6 @@ RFC7231里定义了HTTP方法的几个性质：
 - 虚线：握手阶段结束，开始传输阶段
     - 用三个随机数，生成会话密钥（session key）
     - 将会话密钥（session key）用于对称加密，**实现内容加密**
-
-## 3.  ATS - App Transport Security
 
 
 ## 参考资料
