@@ -17,3 +17,7 @@ Swift 学习 & 秋招过程中的一些收获
 - [Swift Protocol 详解 - 协议&面向协议编程](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/Swift%20Protocol%20%E8%AF%A6%E8%A7%A3%20-%20%E5%8D%8F%E8%AE%AE%26%E9%9D%A2%E5%90%91%E5%8D%8F%E8%AE%AE%E7%BC%96%E7%A8%8B.md)
 - [Singleton - Swift 中的单例](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/Singleton%20-%20Swift%20%E4%B8%AD%E7%9A%84%E5%8D%95%E4%BE%8B.md)
 
+
+### 翻译计划
+
+- [避免 Swift 单元测试中的强制解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/避免%20Swift%20单元测试中的强制解析.md)
