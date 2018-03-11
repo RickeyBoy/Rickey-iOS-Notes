@@ -21,3 +21,7 @@ Swift 学习 & 秋招过程中的一些收获
 ### 翻译计划
 
 - [避免 Swift 单元测试中的强制解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/避免%20Swift%20单元测试中的强制解析.md)
+
+### 有趣的问题
+
+- [小白鼠试毒](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E6%9C%89%E8%B6%A3%E7%9A%84%E9%97%AE%E9%A2%98/%E5%B0%8F%E7%99%BD%E9%BC%A0%E8%AF%95%E6%AF%92%20PDF%20%E7%89%88.pdf)
