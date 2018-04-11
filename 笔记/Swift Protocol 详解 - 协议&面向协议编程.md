@@ -48,7 +48,7 @@
 #### Classes 的问题：
 ##### 1. Implicit Sharing 隐式共享: 
 
-<img src="http://ac-HSNl7zbI.clouddn.com/sdLriPomzMIjCbp1eHEfMCYyfkpYwfgkSdHoSrpo.jpg" width="200">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/1.png?raw=true" width="200">
 
 可能会导致大量保护性拷贝（Defensive Copy），导致效率降低；也有可能发生竞争条件（race condition），出现不可预知的错误；为了避免race condition，需要使用锁（Lock），但是这更会导致代码效率降低，并且有可能导致死锁（Dead Lock）
 
@@ -58,7 +58,7 @@
 
 ##### 3. Lost Type Relationships 不能反应类型关系：
 
-<img src="http://ac-HSNl7zbI.clouddn.com/66GlgQgMNwhd9GQTCoETyFr54Lewk3d2szKOMNk6.jpg" width="300">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/2.jpeg?raw=true" width="300">
 
 上图中，两个类（Label、Number）拥有相同的父类（Ordered），但是在 Number 中调用 Order 类必须要使用强制解析（as！）来判断 Other 的属性，这样做既不优雅，也非常容易出Bug（如果 Other 碰巧为Label类）
 
@@ -69,7 +69,7 @@
 耦合性是一种软件度量，是指一程序中，模块及模块之间信息或参数依赖的程度。高耦合性将使得维护成本变高，同时降低代码可复用程度。低耦合性是结构良好程序的特性，低耦合性程序的可读性及可维护性会比较好。
 
 ##### 耦合级别
-<img src="http://ac-HSNl7zbI.clouddn.com/GChCQD1yLP1OpS97ma6gKWI1vaKjiIxBL0f319NR.jpg" width="300">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/3.jpeg?raw=true" width="300">
 
 图示是耦合程度由高到低，可粗略分为五个级别：
 
@@ -93,8 +93,8 @@ DIP 规定：
 - 高层次的模块不应该依赖于低层次的模块，两者都应该依赖于抽象接口。
 - 抽象接口不应该依赖于具体实现。而具体实现则应该依赖于抽象接口。
 
-<img src="http://ac-HSNl7zbI.clouddn.com/iqOpSwwRYW5E6OLIdzYAKzaUG1RQV9Wsck8O0Ib4.jpg" width="250">
-<img src="http://ac-HSNl7zbI.clouddn.com/zMmTfHKNM48Irrwv07ghyqwtk8SuspQoypRH044U.jpg" width="250">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/4.jpeg?raw=true" width="250">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/5.jpeg?raw=true" width="250">
 
 举一个简单而经典的例子 -- **台灯和按钮**。
 
@@ -147,8 +147,67 @@ let mastermind = EmmettBrown(timeMachine: timeMachine)
 mastermind.travelInTime(time: -3600 * 8760)
 ```
 
+
+## Delegate - 利用 Protocol 解耦
+
+> Delegation is a design pattern that enables a class or structure to hand off (or delegate) some of its responsibilities to an instance of another type.
+
+委托（Delegate）是一种设计模式，表示将一个对象的部分功能转交给另一个对象。委托模式可以用来响应特定的动作，或者接收外部数据源提供的数据，而无需关心外部数据源的类型。部分情况下，Delegate 比起自上而下的继承具有更松的耦合程度，有效的减少代码的复杂程度。
+
+那么 Deleagte 和 Protocol 之间是什么关系呢？在 Swift 中，Delegate 就是基于 Protocol 实现的，定义 Protocol 来封装那些需要被委托的功能，这样就能确保遵循协议的类型能提供这些功能。
+
+Protocol 是 Swift 的语言特性之一，而 Delegate 是利用了 Protocol 来达到解耦的目的。
+
+#### Delegate 使用实例：
+
+```swift
+//定义一个委托
+protocol CustomButtonDelegate: AnyObject{
+    func CustomButtonDidClick()
+}
+ 
+class ACustomButton: UIView {
+    ...
+    weak var delegate: ButtonDelegate?
+    func didClick() {
+        delegate?.CustomButtonDidClick()
+    }
+}
+
+// 遵循委托的类
+class ViewController: UIViewController, CustomButtonDelegate {
+    let view = ACustomButton()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        ...
+        view.delegate = self
+    }
+    func CustomButtonDidClick() {
+        print("Delegation works!")
+    }
+}
+```
+
+#### 代码说明
+
+如前所述，Delegate 的原理其实很简单。`ViewController` 会将 `ACustomButton` 的 `delegate` 设置为自己，同时自己遵循、实现了 `CustomButtonDelegate` 协议中的方法。这样在后者调用 `didClick` 方法的时候会调用 `CustomButtonDidClick` 方法，从而触发前者中对应的方法，从而打印出 Delegation works!
+
+#### 循环引用
+
+我们注意到，在声明委托时，我们使用了 `weak` 关键字。目的是在于避免循环引用。`ViewController` 拥有 `view`，而 `view.delegate` 又强引用了 `ViewController`，如果不将其中一个强引用设置为弱引用，就会造成循环引用的问题。
+
+#### AnyObject
+
+定义委托时，我们让  protocol 继承自  `AnyObject`。这是由于，在 Swift 中，这表示这一个协议只能被应用于 class（而不是 struct 和 enum）。
+
+实际上，如果让 protocol 不继承自任何东西，那也是可以的，这样定义的 Delegate 就可以被应用于 class 以及 struct、enum。由于 Delegate 代表的是遵循了该协议的实例，所以当 Delegate 被应用于 class 时，它就是 Reference type，需要考虑循环引用的问题，因此就必须要用 `weak` 关键字。
+
+但是这样的问题在于，当 Delegate 被应用于 struct 和 enum 时，它是 Value type，不需要考虑循环引用的问题，也不能被使用 `weak` 关键字。所以当 Delegate 未限定只能用于 class，Xcode 就会对 weak 关键字报错：**'weak' may only be applied to class and class-bound protocol types**
+
+那么为什么不使用 class 和 NSObjectProtocol，而要使用 AnyObject 呢？NSObjectProtocol 来自 Objective-C，在 pure Swift 的项目中并不推荐使用。class 和 AnyObject 并没有什么区别，在 Xcode 中也能达到相同的功能，但是官方还是推荐使用 AnyObject。
+
+
 ## 参考资料
-- [Wiki - Coupling](https://en.wikipedia.org/wiki/Coupling_(computer_programming))
 - [WWDC - Protocol-Oriented Programming in Swift](https://developer.apple.com/videos/play/wwdc2015/408/)
 - [Github - OOD-Principles-In-Swift](https://github.com/ochococo/OOD-Principles-In-Swift)
-
+- [The Swift Programming Language - Protocol](https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/Protocols.html)
