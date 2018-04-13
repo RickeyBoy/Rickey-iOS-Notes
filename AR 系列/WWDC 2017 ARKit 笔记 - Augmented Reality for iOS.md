@@ -44,7 +44,7 @@ ARKit 是基于会话的 API，由 `ARSession` 控制所有相关线程。接下
 
 `ARAnchor` 类是真实世界的坐标和方向。在 AR 场景中，使用 ARAnchor 类提供的方向和位置来放置虚拟特征。其实如果类比 CALayer 中的 `Anchor`，`ARAnchor` 就相当于空间物体的 3D 锚点。`ARFrame` 用于捕获相机的移动，其他虚拟物品就用 `ARAnchor`。
 
-### 四、Tracking
+### 四、详解 Tracking
 
 Tracking 是指探测物体在空间中的具体位置。Tracking 是 ARKit 的基础，因为我们必须要实时探测到真实物体的位置，这样才能在设备移动、旋转时，仍能保证进行正确的渲染。ARKit 对应提供了 **World Tracking**，使用 **Virtual Intertial Odometry** 技术。
 
@@ -77,6 +77,15 @@ func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera
 }
 ```
 
+#####  Tracking Interruption
+Tracking 的过程中是有可能被打断的，原因有下面两类，分别是相机不可用和 tracking 被终止。
+- Camera input unavailable
+- Tracking is stopped
+
+### 四、详解 Scene Understanding
+这一部分主要目的是将 AR 中的虚拟物品呈现在现实世界中，需要考虑空间位置信息、光线情况等。第一步，就是要进行 Plane detection 平面检测，找到能够放置物体的平面。第二步，是进行 Hit-testing，来找到放置物体的具体位置坐标。最后，Light estimate 渲染虚拟物体，使得光影更加真实。
+
+Plane Detection 基于重力探测水平面，
 
 
 
