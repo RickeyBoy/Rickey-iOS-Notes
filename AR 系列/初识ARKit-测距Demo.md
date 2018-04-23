@@ -32,7 +32,7 @@
 - ViewController 中内置了部分对 `sceneView` 进行管理的代码
 
 ##### art.scnassets 是什么？
-
+art.scnassets 文件中主要存放的是项目中的模型文件。ARKit 
 
 
 

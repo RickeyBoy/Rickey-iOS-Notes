@@ -85,7 +85,20 @@ Tracking 的过程中是有可能被打断的，原因有下面两类，分别�
 ### 四、详解 Scene Understanding
 这一部分主要目的是将 AR 中的虚拟物品呈现在现实世界中，需要考虑空间位置信息、光线情况等。第一步，就是要进行 Plane detection 平面检测，找到能够放置物体的平面。第二步，是进行 Hit-testing，来找到放置物体的具体位置坐标。最后，Light estimate 渲染虚拟物体，使得光影更加真实。
 
-Plane Detection 基于重力探测水平面，设备在后台
+Plane Detection 基于重力探测水平面，设备在后台通过分析连续的多张 Frame 得到水平面。同时，Plane Detection 也能测量出平面的长度和面积等具体数值。并且，如果有多张平面，也能进行一定的整合
+
+##### ARPlaneAnchor
+
+当一个水平面在 ARKit 中被识别时，它会被添加为 ARPlaneAnchor：
+
+```swift
+// Called when a new plane was detected
+func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+    addPlaneGeometry(forAnchors: anchors) 
+}
+```
 
 
+
+ 
 

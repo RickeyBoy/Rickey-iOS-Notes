@@ -1,7 +1,10 @@
 # Rickey-iOS-Notes
-Swift 学习 & 秋招过程中的一些收获
 
-[RickeyBoy 的专栏 - 掘金](https://juejin.im/user/59c0ede76fb9a00a3d134e0b)
+Swift 学习过程中的一些收获
+
+[Diemension C - 137](https://rickeyboy.github.io)     Rickey & Scarlett 的主页
+
+[RickeyBoy - 掘金](https://juejin.im/user/59c0ede76fb9a00a3d134e0b)
 
 -------
 

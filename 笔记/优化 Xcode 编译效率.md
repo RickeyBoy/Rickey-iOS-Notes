@@ -82,7 +82,7 @@ struct Container {
 
 #### SWIFT_WHOLE_MODULE_OPTIMIZATION 启用全模块优化
 
-**Build Setting -> User-Defined**，增加 key 为 `SWIFT_WHOLE_MODULE_OPTIMIZATION` value 设为 `YES`，**进入工程文件设置 -> Build Setting -> Add User-Defined Settings**，key 为 `SWIFT_WHOLE_MODULE_OPTIMIZATION`，value 设为 `YES` 就可以了。
+**状态栏 -> Editor -> Build Setting -> Add User-Defined Settings**，然后增加 key 为 `SWIFT_WHOLE_MODULE_OPTIMIZATION`，value 为 `YES` 就可以了。
 
 
 
@@ -206,7 +206,24 @@ let totalString = "A" + stringB + "C"
 let totalString = "A\(stringB)C"
 ```
 
-### 5. 提前计算
+
+
+### 5. 改进转化字符串的方式
+
+```swift
+let StringA = String(IntA)
+```
+
+这样拼接字符串可行，但是 Swift 编译器并不青睐这样的写法，尽量改写成下面的方式。
+
+```swift
+let StringA = "\(IntA)"
+```
+
+
+
+### 6. 提前计算
+
 ```swift
 if time > 14 * 24 * 60 * 60 {}
 ```
@@ -223,6 +240,7 @@ if time > 1209600 {} // 14 * 24 * 60 * 60
 
 ##### 减少类型推断
 在一个文件中，共减少了 2 处类型推断，一共优化 0.3ms，改进效果如下：
+
 | -- | 总时间 |
 | :-----------: |:---------------:|
 | 更改前 | 135.3 ms |
@@ -235,6 +253,7 @@ if time > 1209600 {} // 14 * 24 * 60 * 60
 ##### 减少使用 ternary operator
 
 在一个文件中，共减少了 2 处使用三目运算符的地方，一共优化 51.2ms，改进效果如下：
+
 | -- | 总时间 |
 | :-----------: |:---------------:|
 | 更改前 | 229.2 ms |
@@ -247,10 +266,11 @@ if time > 1209600 {} // 14 * 24 * 60 * 60
 ##### 减少使用 nil coalescing operator
 
 在一个文件中，共减少了 5 处使用 nil coalescing operator 的地方，一共优化 2.8ms，具体改进效果如下：
+
 | -- | 总时间 |
 | :-----------: |:---------------:|
 | 更改前 | 386.4 ms |
-| 更改后 | 178.0 ms |
+| 更改后 | 383.6 ms |
 
 根据结果而言，优化效果并不显著。可是根据前文所述，nil coalescing operator 实际上是基于三目运算符的，那么为何优化效果反而不如三目运算符？据我推测，原因可能在于三目运算符只需要改写为 if-else 语句即可，而 nil coalescing operator 大部分时候需要先用 var 实现赋值语句，在使用 if-else 对赋值进行更改，所以总的来说优化效果不大。
 
@@ -259,6 +279,7 @@ if time > 1209600 {} // 14 * 24 * 60 * 60
 ##### 字符串连接方式
 
 在一个文件中，共改进了 7 处字符串的拼接方式，一共优化 73ms，具体改进效果如下：
+
 | -- | 总时间 |
 | :-----------: |:---------------:|
 | 更改前 | 696.1 ms |
@@ -268,14 +289,25 @@ if time > 1209600 {} // 14 * 24 * 60 * 60
 
 
 
+##### 字符串转换方式
+
+在一个文件中，进行了 5 处修改，一共优化 4952.5ms，效果十分显著。具体改进效果如下：
+
+| -- | 总时间 |
+| :-----------: |:---------------:|
+| 更改前 | 5106.2 ms |
+| 更改后 | 153.7 ms |
+
+
+
 ##### 提前计算
 
 在一个文件中，进行了之前例子中的修改，一共优化 843.2ms，效果十分显著。具体改进效果如下：
+
 | -- | 总时间 |
 | :-----------: |:---------------:|
 | 更改前 | 1034.7 ms |
 | 更改后 | 191.5 ms |
-
 
 
 
@@ -284,4 +316,6 @@ if time > 1209600 {} // 14 * 24 * 60 * 60
 1. [Whole-Module Optimization in Swift 3](https://swift.org/blog/whole-module-optimizations/)
 2. [How to enable build timing in Xcode? - Stack Overflow](https://stackoverflow.com/questions/1027923/how-to-enable-build-timing-in-xcode/2801156#2801156)
 3. [Speed up Swift compile time](https://hackernoon.com/speed-up-swift-compile-time-6f62d86f85e6)
+
+
 
