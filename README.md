@@ -26,6 +26,7 @@ Swift 学习过程中的一些收获
 
 - [避免 Swift 单元测试中的强制解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/避免%20Swift%20单元测试中的强制解析.md)
 - [Swift 中的内存泄漏](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/%5B译%5D%20Swift%20中的内存泄漏.md)
+- [重写 loadView() 方法使 Swift 视图代码更加简洁]https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/%5B译%5D%20重写%20loadView()%20方法使%20Swift%20视图代码更加简洁.md
 
 ### 有趣的问题
 
