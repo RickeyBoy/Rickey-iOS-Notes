@@ -34,3 +34,10 @@ Swift 学习过程中的一些收获
 - [白帽子问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E6%9C%89%E8%B6%A3%E7%9A%84%E9%97%AE%E9%A2%98/%E7%99%BD%E5%B8%BD%E5%AD%90%E9%97%AE%E9%A2%98.md)
 - [海盗博弈问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E6%9C%89%E8%B6%A3%E7%9A%84%E9%97%AE%E9%A2%98/%E6%B5%B7%E7%9B%97%E5%8D%9A%E5%BC%88%E9%97%AE%E9%A2%98.md)
 - [圆桌射击游戏](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/有趣的问题/圆桌射击游戏%20PDF%20版.pdf)
+
+### 其他东西
+
+- 证券从业考试思维导图
+  - [金融市场基础知识](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/其他东西/金融市场基础知识.pdf)
+  - [证券市场基本法律法规](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/其他东西/证券市场基本法律法规.pdf)
+
