@@ -36,7 +36,8 @@ Swift 学习过程中的一些收获
 - [圆桌射击游戏](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/有趣的问题/圆桌射击游戏%20PDF%20版.pdf)
 
 ### 其他东西
-
+- 成都行走指南（by Scarlett）
+  - [chengdu_list](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%85%B6%E4%BB%96%E4%B8%9C%E8%A5%BF/%E6%88%90%E9%83%BD%E8%A1%8C%E8%B5%B0%E6%8C%87%E5%8D%97.xlsx)
 - 证券从业考试思维导图
   - [金融市场基础知识](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/其他东西/金融市场基础知识.pdf)
   - [证券市场基本法律法规](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/其他东西/证券市场基本法律法规.pdf)
