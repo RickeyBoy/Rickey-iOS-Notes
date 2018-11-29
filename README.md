@@ -20,6 +20,7 @@ Swift 学习过程中的一些收获
 - [Swift Protocol 详解 - 协议&面向协议编程](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/Swift%20Protocol%20%E8%AF%A6%E8%A7%A3%20-%20%E5%8D%8F%E8%AE%AE%26%E9%9D%A2%E5%90%91%E5%8D%8F%E8%AE%AE%E7%BC%96%E7%A8%8B.md)
 - [Singleton - Swift 中的单例](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/Singleton%20-%20Swift%20%E4%B8%AD%E7%9A%84%E5%8D%95%E4%BE%8B.md)
 - [优化 Xcode 编译时间](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/%E4%BC%98%E5%8C%96%20Xcode%20%E7%BC%96%E8%AF%91%E6%95%88%E7%8E%87.md)
+- [iOS 生命周期的缺失和错乱](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20生命周期的缺失和错乱.md)
 
 
 ### 翻译计划
@@ -34,11 +35,3 @@ Swift 学习过程中的一些收获
 - [白帽子问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E6%9C%89%E8%B6%A3%E7%9A%84%E9%97%AE%E9%A2%98/%E7%99%BD%E5%B8%BD%E5%AD%90%E9%97%AE%E9%A2%98.md)
 - [海盗博弈问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E6%9C%89%E8%B6%A3%E7%9A%84%E9%97%AE%E9%A2%98/%E6%B5%B7%E7%9B%97%E5%8D%9A%E5%BC%88%E9%97%AE%E9%A2%98.md)
 - [圆桌射击游戏](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/有趣的问题/圆桌射击游戏%20PDF%20版.pdf)
-
-### 其他东西
-- 成都行走指南（by Scarlett）
-  - [chengdu_list](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%85%B6%E4%BB%96%E4%B8%9C%E8%A5%BF/%E6%88%90%E9%83%BD%E8%A1%8C%E8%B5%B0%E6%8C%87%E5%8D%97.xlsx)
-- 证券从业考试思维导图
-  - [金融市场基础知识](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/其他东西/金融市场基础知识.pdf)
-  - [证券市场基本法律法规](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/其他东西/证券市场基本法律法规.pdf)
-
