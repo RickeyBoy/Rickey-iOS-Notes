@@ -12,11 +12,11 @@ override func viewWillAppear(_ animated: Bool) {
 
 我们先简单写一个 demo 方便我们提问（demo 地址：[LifeCycleDemo](https://github.com/RickeyBoy/Rickey-iOS-Notes/tree/master/Demos)，非常简单，自己写一个也行）。就是一个用 Storyboard 新建了一个 ViewController，然后可以跳转到另一个 ViewController。
 
-![](https://user-gold-cdn.xitu.io/2018/11/28/16759a27107ebe41?w=714&h=565&f=png&s=33613)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_UIViewController/1.png?raw=true)
 
 然后，我们在 ViewController 的每一个生命周期被调用时都打印一下生命周期的名字，就是下面这样：
 
-![](https://user-gold-cdn.xitu.io/2018/11/29/1675f38d49f39df5?w=539&h=701&f=png&s=122827)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_UIViewController/2.png?raw=true)
 
 好，有了这个 Demo 之后，我们依照这个 Demo 来讨论下面几个问题：
 
@@ -42,7 +42,7 @@ override func loadView() {
 ```
 #### 答案：infinite stack trace
 
-![](https://user-gold-cdn.xitu.io/2018/11/29/1675e03257a8b9e1?w=355&h=432&f=png&s=87270)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_UIViewController/3.png?raw=true)
 
 可以看出，[UIViewController view] 和 ViewController.loadView 循环调用了。这是因为在 loadView 之前，view 并没有被创建，而由于 view 是懒加载的，此时调用 self.view 会触发 loadView，由此导致了循环引用。
 
@@ -117,7 +117,7 @@ override func viewDidDisappear(_ animated: Bool) {
 ```
 #### 答案：继承时可能有问题
 
-![](https://user-gold-cdn.xitu.io/2018/11/29/1675eea12287be9c?w=1200&h=319&f=png&s=258114)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_UIViewController/4.png?raw=true)
 
 根据代码注释描述可以知道，实际上这些方法并没有实际上做什么事情，只是在特定的时间节点，起到一个通知的作用。所以在我们的 demo 里，错误调用、不调用不会有什么实质上的错误。但是由于我们在复杂的项目中会有非常复杂的继承关系，如果中间有一个地方错了，那么很可能影响继承关系中的其他 ViewController。所以还是应该严格准确地调用 super 方法。
 
