@@ -2,13 +2,30 @@
 
 
 
-### 最终效果
+> 本文旨在记录、讲解开发一个 Widget（Today Extension）的全过程，包括一些基本流程和采坑记录，几乎都是干货。
+>
+> 目录：
+>
+> 0. 最终效果
+> 1. 新建 Widget 项目
+> 2. Swift 纯代码布局
+> 3. 使用 Pod 引入第三方库
+> 4. 使用 Pod 的一个坑
+> 5. 跳转调起 host app
+> 6. 数据共享
+> 7. 代码共享
+> 8. 展开和收起
+> 9. 后台更新 UI 的问题
+
+
+
+### 0. 最终效果
 
 ![Widget_gif.gif](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/Widget_gif.gif?raw=true)
 
 
 
-### 新建 widget 项目
+### 1. 新建 widget 项目
 
 直接新建一个 Target 即可，File -> New -> Target。
 
@@ -16,7 +33,7 @@
 
 
 
-### Swift 纯代码布局
+### 2. Swift 纯代码布局
 
 新建 Target 之后，如果想用纯代码布局，设置 **NSExtensionPrincipalClass** 字段即可。设置之后可以删掉 storyboard 和 **NSExtensionMainStoryboard**。同时还顺带可以改一下 **bundle display name**
 
@@ -24,7 +41,7 @@
 
 
 
-### 使用 Pod 引入第三方库
+### 3. 使用 Pod 引入第三方库
 
 使用 pod 引入库需要总共两个步骤：
 
@@ -52,7 +69,7 @@ end
 
 
 
-### 使用 Pod 的一个坑：'sharedApplication()' is unavailable: Use view controller based solutions where appropriate instead.
+### 4. 使用 Pod 的一个坑：'sharedApplication()' is unavailable: Use view controller based solutions where appropriate instead.
 
 之前为了方便起见，最开始我引入了很多主 app 中的库，比如网络库之类的，测试机用得好好的，一真机运行就报错：
 
@@ -94,9 +111,7 @@ Google 之后发现 [Stack Overflow - DoertyDoerk](https://stackoverflow.com/a/3
 
 
 
-
-
-### 跳转调起 host app
+### 5. 跳转调起 host app
 
 想要跳转到 host app，需要配置一下 URL Schemes：
 
@@ -118,7 +133,7 @@ Google 之后发现 [Stack Overflow - DoertyDoerk](https://stackoverflow.com/a/3
 
 
 
-### 数据共享
+### 6. 数据共享
 
 盗用官方文档（[App Extension Programming Guide - Handling Common Scenarios](https://developer.apple.com/library/archive/documentation/General/Conceptual/ExtensibilityPG/ExtensionScenarios.html)）中一张图，说明一下主 app 和 extension 之间实际上是两个不同的进程，App's Container 也是不一样的。所以想要共享数据，必须要通过 **shared container**，也就是下面讲到的 App Groups。
 
@@ -164,7 +179,7 @@ static func dataFromMainApp() -> [String: String]? {
 
 
 
-### 代码共享
+### 7. 代码共享
 
 代码共享实际上很见到，在下图所示的地方勾选一下就行，和普通 Target 之间共享代码没有任何区别。
 
@@ -174,7 +189,7 @@ static func dataFromMainApp() -> [String: String]? {
 
 
 
-### 展开和收起
+### 8. 展开和收起
 
 展开和收起直接实现 [widgetActiveDisplayModeDidChange](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-10.png?raw=true) 方法就行了。
 
@@ -188,7 +203,7 @@ func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, 
 
 
 
-### 后台更新 UI 的问题
+### 9. 后台更新 UI 的问题
 
 需要注意的是，网络请求后更新 UI 要在主线程进行，否则会报下面的错误。
 
