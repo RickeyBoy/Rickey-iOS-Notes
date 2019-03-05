@@ -1,10 +1,18 @@
 # iOS Widget 开发详解（Today Extension）
 
+
+
+### 最终效果
+
+![Widget_gif.gif](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/Widget_gif.gif?raw=true)
+
+
+
 ### 新建 widget 项目
 
 直接新建一个 Target 即可，File -> New -> Target。
 
-![img](https://docs.bytedance.net/api/file/out/Yer4N5Vz9NezzCO2kqe5eWzhWT38m49ZELNhEsJD4WUeMGH9vC/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-1.png?raw=true)
 
 
 
@@ -12,7 +20,7 @@
 
 新建 Target 之后，如果想用纯代码布局，设置 **NSExtensionPrincipalClass** 字段即可。设置之后可以删掉 storyboard 和 **NSExtensionMainStoryboard**。同时还顺带可以改一下 **bundle display name**
 
-![img](https://docs.bytedance.net/api/file/out/pM6tE8RZ8oFV6JiOecNeV1FVcAg6gsj5S1uHPWDsyzZ84GD4Wp/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-2.png?raw=true)
 
 
 
@@ -22,7 +30,7 @@
 
 - 第一步：在 Project Configurations 中进行配置。如下如所示。一般来说，进行了这一步之后，在测试机上就可以正常运行使用第三方库了，但是如果想要真机运行、上架还需要第二步。
 
-![img](https://docs.bytedance.net/api/file/out/lPe39tfVo5r1VryFalcNXxv7i4iGKFxNImKwoHlaRFIwKRgMXN/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-3.png?raw=true)
 
 - 第二步：在 Podfile 中进行配置。在 Widget 中我是用了 SnapKit，ObjectMapper 两个库，只需要在 Podfile 中引入这两个库就行了，写好之后 pod update 就可以真机运行了。
 
@@ -52,9 +60,9 @@ end
 
 
 
-Google 之后发现 [Stack Overflow - ](https://stackoverflow.com/a/34227172)[DoertyDoerk](https://stackoverflow.com/a/34227172) 的回答说，只需要把 **Require Only AppExtension-Safe API** 设置为 No 就行。类似下图：
+Google 之后发现 [Stack Overflow - DoertyDoerk](https://stackoverflow.com/a/34227172) 的回答说，只需要把 **Require Only AppExtension-Safe API** 设置为 No 就行。类似下图：
 
-![img](https://docs.bytedance.net/api/file/out/QBbcric3Bwsnp45LiNUuireGv2tG0GjNtRnwVumMdbbX19F0Zj/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-4.png?raw=true)
 
 需要注意的是，需要全选所有的 Targets，并且统一将红色箭头设置的地方为 No。这样设置之后确实是可以真机运行了，但是有一个问题就是直接这样设置仿佛是非常有问题的。
 
@@ -92,7 +100,7 @@ Google 之后发现 [Stack Overflow - ](https://stackoverflow.com/a/34227172)[Do
 
 想要跳转到 host app，需要配置一下 URL Schemes：
 
-![img](https://docs.bytedance.net/api/file/out/Qyucf9yoj3lLL6fpTerHp5J9603NCwbBFVmuRopwQ8pLXVKUrW/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-5.png?raw=true)
 
 
 
@@ -116,7 +124,7 @@ Google 之后发现 [Stack Overflow - ](https://stackoverflow.com/a/34227172)[Do
 
 
 
-![img](https://docs.bytedance.net/api/file/out/TriiGuxvAAhuyNZVuHZxSo2WTVB77xbmwDzUy9ukJ8UJj26XPv/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-6.png?raw=true)
 
 顺便说一下，从图里可以看出，Extension 的 bundle 必须是 Containing App 的子集。也就是说加入主 app 的 bundle id 是 com.RickeyBoy.iphone.stock，那么 Widget 的 bundle id 必须是以 com.RickeyBoy.iphone.stock 为前缀的，比如 com.RickeyBoy.iphone.stock.StockWidget。
 
@@ -124,9 +132,9 @@ Google 之后发现 [Stack Overflow - ](https://stackoverflow.com/a/34227172)[Do
 
 具体设置 App Groups 的步骤如下。我们都知道，想要使用 **Capabilities** 中的服务（比如 push notification 等），必须要申请证书，在这个过程中，Xcode 会自动帮我们创建相应的证书（必须要有开发者账号哈）。
 
-![img](https://docs.bytedance.net/api/file/out/AwJN3hvZqZBBjL7CYo33lOS8pRdLOQalQCR7pXCXixYCSvr3P1/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-7.png?raw=true)
 
-![img](https://docs.bytedance.net/api/file/out/UDQhTjsrlDRzDVNuwnhuDBTLt5kmallEKBKGmmqeCLIvwzhy9l/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-8.png?raw=true)
 
 
 
@@ -160,7 +168,7 @@ static func dataFromMainApp() -> [String: String]? {
 
 代码共享实际上很见到，在下图所示的地方勾选一下就行，和普通 Target 之间共享代码没有任何区别。
 
-![img](https://docs.bytedance.net/api/file/out/AT4JYuAnxk2hfYqqrd0asCHcifQZYK2tzMlP2UbbDIruFbSrSw/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-9.png?raw=true)
 
 
 
@@ -168,7 +176,7 @@ static func dataFromMainApp() -> [String: String]? {
 
 ### 展开和收起
 
-展开和收起直接实现 [widgetActiveDisplayModeDidChange](https://developer.apple.com/documentation/notificationcenter/ncwidgetproviding/1649132-widgetactivedisplaymodedidchange) 方法就行了。
+展开和收起直接实现 [widgetActiveDisplayModeDidChange](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-10.png?raw=true) 方法就行了。
 
 ```swift
 func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, withMaximumSize maxSize: CGSize) {
@@ -176,7 +184,7 @@ func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, 
 }
 ```
 
-![img](https://docs.bytedance.net/api/file/out/oKAAg170oH2nGrL275V2deQUy2TyE1pgip0mWqrM0YNtLlEReA/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-10.png?raw=true)
 
 
 
@@ -186,4 +194,4 @@ func widgetActiveDisplayModeDidChange(_ activeDisplayMode: NCWidgetDisplayMode, 
 
 > This application is modifying the autolayout engine from a background thread after the engine was accessed from the main thread. This can lead to engine corruption and weird crashes
 
-![img](https://docs.bytedance.net/api/file/out/Sk61CQnx4o5sUhZgYmO4MtKEvLhwNaq1N9tCXNNcbJdHGRdEb5/)
+![img](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图片备份/Blog_Swift_Widget/1-11.png?raw=true)
