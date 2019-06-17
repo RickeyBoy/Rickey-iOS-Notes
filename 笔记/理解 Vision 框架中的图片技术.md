@@ -7,7 +7,7 @@
 
 本文主要介绍了 Vision 框架在图像技术方面的一些酷炫功能，并一定程度上阐述了其原理。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/6tsegicf3N7HzvOFw4ZUQzk9ZYfnSjuQcCZhMwPzK9kDC2SVSa/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/0_Title_%E7%90%86%E8%A7%A3Vision%E6%A1%86%E6%9E%B6%E4%B8%AD%E7%9A%84%E5%9B%BE%E7%89%87%E6%8A%80%E6%9C%AF.png?raw=true)
 
 ## 图片重点区域 Saliency 
 
@@ -15,7 +15,7 @@
 
 Saliency 直译成中文就是：显著、凸起、特点。那么在 Vision 框架之中，Saliency 究竟指的是什么呢？先直接上图：
 
-![img](https://internal-api.feishu.cn/space/api/file/out/J8ofNOpJ5knjWfif8xQElvk506kc0CaUFXfiMyPVP4VgS2WJmD/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/1_Saliency0.png?raw=true)
 
 当我们第一次看到左侧这张图片时，视线一定是最先被这三张鸟脸 (海雀脸) 吸引的。如果把注意力集中的地方，用高光在图片中标注出来，那么大概就是第二张图这样：高光集中于鸟的头部。
 
@@ -23,25 +23,25 @@ Saliency 直译成中文就是：显著、凸起、特点。那么在 Vision 框
 
 ### 两种 Saliency
 
-![img](https://internal-api.feishu.cn/space/api/file/out/gEFafLhl7o6YKXXic6LEiGOcbWsdoRhFNfuf9fcxA8b2WV1t6Y/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/1_Saliency1.png?raw=true)
 
 这两种 Saliency 在算法上就有着比较明显的不同。基于注意力的 Saliency 实际上就是直观的由人类注意力的集中程度来判定，而基于物体的 Saliency 目的是识别出焦点物体，然后将焦点物体分割出来。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/Ic8l3iRPcU9XQgyPZYDcuePuSspGkaiAqevqJaJ8VCGxQbxTAR/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/1_Saliency2.png?raw=true)
 
 所以效果图如上，中间的图是基于注意力的结果，我们通常关注的是人物、动物的面部，所以只有面部附近会高亮。而右边的图将整个鸟都高亮了出来，是基于物体的结果。比如下面这张图，也是同样的道理：
 
-![img](https://internal-api.feishu.cn/space/api/file/out/qfItJqd5Y0Dl2GRFNJJ0y96Ua9rLQZuBNFT08K1OwmqRps8JfK/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/1_Saliency3.png?raw=true)
 
 实际上，基于注意力的 Saliency 会更为复杂。其实我们也能直观地感受到，因为注意力本身就会受到太多人为的不确定因素的影响，比如画面对比度、人物面部、画面主题、视野范围、光线强度等。有意思的是，它甚至会被持续的运动状态所影响，比如下图中，基于注意力的 Saliency 将人物行进路线前方的部分区域也进行了高亮：
 
-![img](https://internal-api.feishu.cn/space/api/file/out/wtQgOAV9uuSk9cOjgjMjghvnQs3K8z41fAYMc3V5UTj9tL3FNj/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/1_Saliency4.png?raw=true)
 
 具体的 Demo 可以参见：[高亮图片中令人感兴趣的部分](https://developer.apple.com/documentation/vision/highlighting_areas_of_interest_in_an_image_using_saliency)
 
 ### The Heat Map: Saliency 热力图
 
-![img](https://internal-api.feishu.cn/space/api/file/out/U8Ejj1P7PEBzBNkBJ5BmNhhcqiahaZv9gyCxfpuDGhP6Ahe7zg/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/1_Saliency5.png?raw=true)
 
 热力图的概念很容易理解，那么如何获取 Saliency 热力图呢？Vision API 设计的基本使用逻辑就是 handler 搭配 request。通过创建 handler ([VNImageRequestHandler](https://developer.apple.com/documentation/vision/vnimagerequesthandler), Vision 图片处理中最主要的 Handler) 之后调用 [perform(_:)](https://developer.apple.com/documentation/vision/vnimagerequesthandler/2880297-perform) 方法，执行相应的 request ([VNGenerateAttentionBasedSaliencyImageRequest](https://developer.apple.com/documentation/vision/vngenerateattentionbasedsaliencyimagerequest?language=objc)，从名字就可以看出，关键词 AttentionBasedSaliency)，具体代码如下：
 
@@ -66,7 +66,7 @@ var boundingBox: CGRect { get }
 
 Bounding boxes 就是探测出来的 Saliency 的位置信息，不过需要注意的是，坐标系的原点在图片左下角。对于基于注意力的 Saliency 来说，只有唯一的 bounding box，而基于物体的 Saliency 则最多有三个 bounding box。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/MtK5lYBYq4PYzHe68WeuKMaeqzDAbHc18C6kqRxuJY1hIZucjC/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/1_Saliency6.png?raw=true)
 
 获取 bounding box 代码如下：
 
@@ -85,7 +85,7 @@ func addSalientObjects(in observation: VNSaliencyImageObservation,
 
 ### 一些使用案例
 
-![img](https://internal-api.feishu.cn/space/api/file/out/EM47eVtKwO10bCmGNdQyg7cBn1sUzeqFxmrOTiFZj2EXITE2Vl/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/1_Saliency7.png?raw=true)
 
 得到图片 Saliency 之后其实有很多作用，具体举几个例子：
 - 用于滤镜：增加不同类型的滤镜、图片效果。
@@ -102,7 +102,7 @@ func addSalientObjects(in observation: VNSaliencyImageObservation,
 
 到底哪些 object 可以被识别？这就要引出 Taxonomy 的概念了。Taxonomy 实际上指的是生物学上的分类系统，不同物体根据语义上的含义被分类。在这个树状结构中，有超过 1000 个分类，父类更加宽泛，子类更加具体。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/k7klsd0hirOWgF3bPkAOtXuBPLOHYVrrSL7jIGmlIybesHMcsx/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/2_Classification0.png?raw=true)
 
 也可以通过下面的语句，查看整个 Taxonomy：
 
@@ -122,7 +122,7 @@ let observations = request.results as? [VNClassificationObservation]
 
 最终得到一个 Observation 数组，包含一系列物体识别结果，以及分别对应的信心值（可能性）。注意到信心值总和不为 1，这就是因为刚才提到的 Multi-label network 所产生的结果。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/Tgld6HJf2mi2rc9GR46rIu2gZlb8OWig6YB6sBzFRGF9brb69y/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/2_Classification1.png?raw=true)
 
 ```
 // 上图识别之后的 observations 示例结果
@@ -136,7 +136,7 @@ let observations = request.results as? [VNClassificationObservation]
 
 接下来，我们需要先引入两个指标：Precision 查准率、Recall 召回率。用一张比较经典的图来解释一下：
 
-![img](https://internal-api.feishu.cn/space/api/file/out/X6NqYRzLhjUpb5OQSDy6pfa0Vgu9wiSZbWygPrmYc8FFHtz8ew/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/2_Classification2.png?raw=true)
 
 - Precision 查准率，指的是所有预测中真正预测对的比例。它能够反映出误报的程度。Precision 率越高，代表预测的越准确，误报数量越少。
 - Recall 召回率，指的是所有符合要求的结果中，被成功预测出来的比例。它反映的是漏报程度。Recall 率越高，代表预测的越准确，漏报数量越少。
@@ -161,11 +161,11 @@ let searchObservations = observations?.filter { $0.hasMinimumPrecision(0.5, forR
 
 PR 曲线反映的是同一个分类器下 Precision 和 Recall 的关系，可以用来衡量分类器性能的优劣。可以看到 Precision 和 Recall 负相关。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/Bim7VuWHSWUi6F38oX6Dd0wkQLICjlTKScwpvc28Jq0nY9mcEq/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/2_Classification3.png?raw=true)
 
 对于 PR 曲线上每一个点，都对应着一个 Precision 和 Recall 的值。我们可以通过 PR 曲线来直观地理解上文中筛选、过滤的这个过程。比如下面我们分别有三个分类器，分别对应识别"Cat"、"Anvil"以及"CD"时的 PR 曲线。当我们限制了 (Recall = 0.5, Precision >= 0.4) 时，可以看到前两张图都存在买组条件的点，而第三张图并不存在，那么很明显的 "CD" 就应该被从结果中过滤掉。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/B75jExPuTJyQyCcJWPe0dKi8WsIIQBagOmyBYJk47Is9fwf1Fk/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/2_Classification4.png?raw=true)
 
 ## 图片相似度 Image Similarity
 
@@ -175,11 +175,11 @@ PR 曲线反映的是同一个分类器下 Precision 和 Recall 的关系，可�
 
 1. 使用像素点信息进行比较。这样比较非常不准确，小小的改动就会完全判定为不同图片。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/aSiEvRCwKciv98wiCZgOpUstGIMEzejvxJRPFj8Nw2OJs1J2iZ/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/3_ImageSimilarity0.png?raw=true)
 
 2. 使用关键词。但是关键词对于一张图片来说过于笼统，不够精确。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/K9mO9P1q0YonmSj3rqR5ebDsINjQx55by80HwO3ghCgD4WjR01/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/3_ImageSimilarity1.png?raw=true)
 
 对于一个图片的描述，不能仅仅包含对其表面样式的描述，还必须包含对图片的内容的进一步叙述。用上述传统方法我们很难实现所谓的"进一步描述"，但是巧妙的是，当我们在用分类神经网络对图片进行分类时，神经网络本身就是对图片的进一步描述。神经网络的上层网络（upper layers）正好包含了图片的关键信息（salient information），同时也恰好能摒弃掉了一些冗余信息。所以，我们可以利用这个特点，来对图片进行描述。
 
@@ -191,7 +191,7 @@ FeaturePrint 用于描述图片内容的向量，和传统的词向量 (word vec
 
 在得到了 FeaturePrint 之后，我们就可以直接比较图片间的相似程度。[computeDistance(_:to:)](https://developer.apple.com/documentation/vision/vnfeatureprintobservation/3182823-computedistance) 方法可以直接得到一个反映图片相似度的浮点数。比如下图中，数值越小，图片在语义 (semantic sense) 上越相似。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/wwRprFwVbqwz9iy15DBXhiEVA8qI9YzlYDf6l0x2F5zYRHvapT/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/3_ImageSimilarity2.png?raw=true)
 
 具体 Demo 参见：[Demo - 使用FeaturePrint比较图片间相似度](https://developer.apple.com/documentation/vision/analyzing_image_similarity_with_feature_print)
 
@@ -207,23 +207,23 @@ FeaturePrint 用于描述图片内容的向量，和传统的词向量 (word vec
 2. 每个点都提供了信心度 (之前只能提供一个整体的信心度)
 3. 瞳孔识别更加精确
 
-![img](https://internal-api.feishu.cn/space/api/file/out/qRrSqgro0zqxbfJ4OPfakrqu51hH9LLNfSuChXeXgGrys7353U/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/4_Face0.png?raw=true)
 
-![img](https://internal-api.feishu.cn/space/api/file/out/omcbREActjUF0hDCVB1laffIQUBhpH6vBqSvHrLtWDAzOZZ1ls/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/4_Face1.png?raw=true)
 
 ### Face Capture Quality: 人脸拍摄质量
 
 Face capture quality 是一个综合性指标，用于判定人像效果的好坏，衡量因素包含光线、模糊程度、是否有遮挡、表现力、人物姿态等等。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/NOPeMILiMPxaGWJXrvEkmADALbr29juJMprXDqPRAHgHSEU0aw/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/4_Face2.png?raw=true)
 
 比如第一张照片就比第二张照片得分高，意味着第一张照片有着更好的拍摄质量。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/g074RaRMr7ZGOsuB13P30AKLZakOfOBfbTxxyUDkWPzLU0Z2Be/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/4_Face3.png?raw=true)
 
 我们可以通过上面的代码，直接得到一张图片的 face capture quality 的数值，进而将相似图片进行比较，筛选出更加优质的图片。比如这里个 Demo：[根据 face capture quality 筛选自拍照](https://developer.apple.com/documentation/vision/selecting_a_selfie_based_on_capture_quality)
 
-![img](https://internal-api.feishu.cn/space/api/file/out/QGipTCn3B8hhFruOaL3GsolCfeuDheT2Ah7rpcKTTiB9sGFUMk/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/4_Face4.png?raw=true)
 
 注意，face capture quality 不能和一个固定阈值进行比较。不同系列的照片中 face capture quality 值分布区域可能不同，如果我们以一个固定的阈值来过滤（比如上图中的 0.520），那么有可能会把左边全部的照片都过滤掉，哪怕其实左边的图片有一些相对拍的好的照片。换句话说，face capture quality 只是一个对同一个被摄物体的相对值，它的绝对数值大小并不能直接反映照片的拍摄效果。
 
@@ -233,7 +233,7 @@ Face capture quality 是一个综合性指标，用于判定人像效果的好�
 
 除了这些传统的识别器，还有一些新的比如人体 (Human Detector) 和猫狗 (Cat and Dog Detectors) 的识别器。
 
-![img](https://internal-api.feishu.cn/space/api/file/out/aWcPaaYLeppq1WAObIa3vxevugOYzSh51bniT0ZT47VkvkisjR/)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E5%9B%BE%E7%89%87%E5%A4%87%E4%BB%BD/Blog_WWDC2019_Vision/5_Other0.png?raw=true)
 
 ### 视频追踪技术的强化
 
