@@ -2,7 +2,7 @@
 
 本文以 iOS Memory 的相关内容作为主题，主要从一般操作系统的内存管理、iOS 系统内存、app 内存管理等三个层面进行了介绍，主要内容的目录如下：
 
-![1](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/1.png)
+![1](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSMemory/1.png?raw=true)
 
 iOS 是基于 BSD 发展而来，所以先理解一般的桌面操作系统的内存机制是非常有必要的。在此基础之上，本文会进一步在 iOS 系统层面进行分析，包括 iOS 整体的内存机制，以及 iOS 系统运行时的内存占用的情况。最后会将粒度缩小到 iOS 中的单个 app，讲到单个 app 的内存管理策略。
 
@@ -16,7 +16,7 @@ iOS 是基于 BSD 发展而来，所以先理解一般的桌面操作系统的�
 
 ### 冯·诺依曼结构
 
-![1](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/2.png)
+![2](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/2.png?raw=true)
 
 冯·诺依曼结构（Von Neumann architecture）在 1945 年就已经被提出了， 这个概念当时十分新颖，它第一次将存储器和运算器分离，导致了以存储器为核心的现代计算机的诞生。
 
@@ -30,13 +30,13 @@ iOS 是基于 BSD 发展而来，所以先理解一般的桌面操作系统的�
 
 ### 存储器的层次结构
 
-![3](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/3.png)
+![3](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/3.png?raw=true)
 
 存储器主要分为两类：易失性存储器速度更快，断电之后数据会丢失；非易失性存储器容量更大、价格更低，断电也不会丢失数据。随机访问存储器 RAM 也分为两类，其中 SRAM 速度更快，所以用作高速缓存，DRAM 用作主存。只读存储器 ROM 实际上只有最开始的时候是只读的，后来随着发展也能够进行读写了，只是沿用了之前的名字。
 
 
 
-![4](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/4.png)
+![4](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/4.png?raw=true)
 
 上图就是多层存储器的具体情况，我们平时常说的内存，实际上就是指的 L4 主存。而 L1-L3 高速缓存和主存相比，速度更快，并且它们都已经集成在 CPU 芯片内部了。其中 L0 寄存器本身就是 CPU 的组成部分之一，读写速度最快，操作耗费 0 个时钟周期。
 
@@ -54,7 +54,7 @@ iOS 是基于 BSD 发展而来，所以先理解一般的桌面操作系统的�
 
 不过支持了分段机制的物理寻址，仍然有一些问题，最严重的问题之一就是地址空间缺乏保护。简单来说，因为直接暴露的是物理地址，所以进程可以访问到任何物理地址，用户进程想干嘛就干嘛，这是非常危险的。
 
-![](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/5.png)
+![5](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/5.png?raw=true)
 
 现代处理器使用的是虚拟寻址的方式，CPU 通过访问虚拟地址（Virtual Address），经过翻译获得物理地址，才能访问内存。这个翻译过程由 CPU 中的内存管理单元（Memory Management Unit，缩写为 MMU）完成。
 
@@ -68,11 +68,11 @@ iOS 是基于 BSD 发展而来，所以先理解一般的桌面操作系统的�
 
 刚才提到，直接使用物理寻址，会有地址空间缺乏保护的严重问题。那么如何解决呢？实际上在使用了虚拟寻址之后，由于每次都会进行一个翻译过程，所以可以在翻译中增加一些额外的权限判定，对地址空间进行保护。所以，对于每个进程来说，操作系统可以为其提供一个独立的、私有的、连续的地址空间，这就是所谓的虚拟内存。
 
-![6](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/6.png)
+![6](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/6.png?raw=true)
 
 虚拟内存最大的意义就是保护了进程的地址空间，使得进程之间不能够越权进行互相地干扰。对于每个进程来说，操作系统通过虚拟内存进行"欺骗"，进程只能够操作被分配的虚拟内存的部分。与此同时，进程可见的虚拟内存是一个连续的地址空间，这样也方便了程序员对内存进行管理。
 
-![7](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/7.png)
+![7](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/7.png?raw=true)
 
 对于进程来说，它的可见部分只有分配给它的虚拟内存，而虚拟内存实际上可能映射到物理内存以及硬盘的任何区域。由于硬盘读写速度并不如内存快，所以操作系统会优先使用物理内存空间，但是当物理内存空间不够时，就会将部分内存数据交换到硬盘上去存储，这就是所谓的 Swap 内存交换机制。有了内存交换机制以后，相比起物理寻址，虚拟内存实际上利用硬盘空间拓展了内存空间。
 
@@ -162,7 +162,7 @@ array[0] = 32
 array[19999] = 64
 ```
 
-![8](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/8.png)
+![8](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/8.png?raw=true)
 
 所有不属于 clean memory 的内存都是 dirty memory。这部分内存并不能被系统重新创建，所以 dirty memory 会始终占据物理内存，直到物理内存不够用之后，系统便会开始清理。
 
@@ -182,7 +182,7 @@ array[19999] = 64
 
 ### 内存占用组成
 
-![9](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/9.png)
+![9](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/9.png?raw=true)
 
 对于 app 来说，我们主要关心的内存是 dirty memory，当然其中也包含 compressed memory。而对于 clean memory，作为开发者通常可以不必关心。
 
@@ -190,7 +190,7 @@ array[19999] = 64
 
 按照正常的思路，app 监听到内存警告时应该主动清理释放掉一些优先级低的内存，这本质上是没错的。不过由于 compressed memory 的特殊性，所以导致内存占用的实际大小考虑起来会有些复杂。
 
-![10](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/10.png)
+![10](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/10.png?raw=true)
 
 比如上面这种情况，当我们收到内存警告时，我们尝试将 Dictionary 中的部分内容释放掉，但由于之前的 Dictionary 由于未使用，所以正处于被压缩状态；而解压、释放部分内容之后，Dictionary 处于未压缩状态，可能并没有减少物理内存，甚至可能反而让物理内存更大了。
 
@@ -208,7 +208,7 @@ array[19999] = 64
 
 前文我们说过，每个进程都有独立的虚拟内存地址空间，也就是所谓的进程地址空间。现在我们稍微简化一下，一个 iOS app 对应的进程地址空间大概如下图所示：
 
-![11](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/11.png)
+![11](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/11.png?raw=true)
 
 每个区域实际上都存储相应的内容，其中代码区、常量区、静态区这三个区域都是自动加载，并且在进程结束之后被系统释放，开发者并不需要进行关注。
 
@@ -258,7 +258,7 @@ class viewController: UIViewController {
 
 上面这段代码中，`viewController` 会持有 `someClosure`，而 `someClosure` 也因为需要使用 `self.a + self.b` 而持有了 `viewController`，这就导致了循环引用。注意，闭包和类相似，都是引用类型，当把闭包赋值给类的属性时，实际上是把闭包的引用赋值给了这个属性。
 
-![12](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/12.png)
+![12](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/12.png?raw=true)
 
 解决方法也很简单，利用 Swift 提供的闭包捕获列表，将循环引用中的一个强引用关系改为弱引用就好了。实际上，Swift 要求在闭包中使用到了 `self` 的成员都必须不能省略 `self.` 的关键词，就是为了提醒这种情况下可能发生循环引用问题。
 
@@ -291,7 +291,7 @@ someClosure = { [unowned self] in
 
 如果简单类比，使用 `weak` 的引用对象就类似于一个可选类型，使用时需要考虑解包；而使用 `unowned` 的引用对象就类似于已经进行强制解包了，不需要再解包，但是如果对象是 `nil`，那么就会直接 crash。
 
-![13](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/13.png)
+![13](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/13.png?raw=true)
 
 到底什么情况下可以使用 `unowned` 呢？根据官方文档 [Automatic Reference Counting](https://docs.swift.org/swift-book/LanguageGuide/AutomaticReferenceCounting.html) 所说，无主引用在其他实例有相同或者更长的生命周期时使用。
 
@@ -392,7 +392,7 @@ class viewController {
 
 此时并不会产生循环引用，因为 `self` 并不会持有 static class，因此也不会产生内存泄漏：
 
-![14](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/14.png)
+![14](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSMemory/14.png?raw=true)
 
 
 
