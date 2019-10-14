@@ -6,9 +6,9 @@
 ### 单例是什么？
 单例模式（Singleton Pattern）是最简单的设计模式之一。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。这种模式涉及到一个单一的类，该类负责创建自己的对象，同时确保只有单个对象被创建。
 
-<img src="http://ac-HSNl7zbI.clouddn.com/D2ErxUYP5HxTVE2mPV8vBobUxlOWdoNKkN5OVdO6.jpg" width="200">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/swiftSingleton/0.jpeg?raw=true" width="200">
 
-<img src="http://ac-HSNl7zbI.clouddn.com/LP3b1q4RrOrmmoAuVUir6lA0Gsrk52KVvS2Wh3Hf.jpg" width="300">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/swiftSingleton/1.jpeg?raw=true" width="500">
 
 基本要求：
 - 只能有一个实例。
@@ -30,7 +30,7 @@
 - **避免对资源的多重占用**：比如写文件操作，由于只有一个实例存在内存中，避免对同一个资源文件的同时写操作
 
 ## Singleton 在 Swift 中的实现
-    
+
 ### 第一种方式：
 也是最直接简洁的方式：将实例定义为全局变量。比如下面的代码，声明了一个实例变量`sharedManager`。
 
