@@ -48,7 +48,7 @@
 #### Classes 的问题：
 ##### 1. Implicit Sharing 隐式共享: 
 
-<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/1.png?raw=true" width="200">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/swiftProtocol/0.png?raw=true" width="400">
 
 可能会导致大量保护性拷贝（Defensive Copy），导致效率降低；也有可能发生竞争条件（race condition），出现不可预知的错误；为了避免race condition，需要使用锁（Lock），但是这更会导致代码效率降低，并且有可能导致死锁（Dead Lock）
 
@@ -58,7 +58,7 @@
 
 ##### 3. Lost Type Relationships 不能反应类型关系：
 
-<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/2.jpeg?raw=true" width="300">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/swiftProtocol/1.jpeg?raw=true" width="500">
 
 上图中，两个类（Label、Number）拥有相同的父类（Ordered），但是在 Number 中调用 Order 类必须要使用强制解析（as！）来判断 Other 的属性，这样做既不优雅，也非常容易出Bug（如果 Other 碰巧为Label类）
 
@@ -69,7 +69,7 @@
 耦合性是一种软件度量，是指一程序中，模块及模块之间信息或参数依赖的程度。高耦合性将使得维护成本变高，同时降低代码可复用程度。低耦合性是结构良好程序的特性，低耦合性程序的可读性及可维护性会比较好。
 
 ##### 耦合级别
-<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/3.jpeg?raw=true" width="300">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/swiftProtocol/2.jpeg?raw=true" width="500">
 
 图示是耦合程度由高到低，可粗略分为五个级别：
 
@@ -93,8 +93,8 @@ DIP 规定：
 - 高层次的模块不应该依赖于低层次的模块，两者都应该依赖于抽象接口。
 - 抽象接口不应该依赖于具体实现。而具体实现则应该依赖于抽象接口。
 
-<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/4.jpeg?raw=true" width="250">
-<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/图床/Blog_Protocol/5.jpeg?raw=true" width="250">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/swiftProtocol/3.jpeg?raw=true" width="500">
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/swiftProtocol/4.jpeg?raw=true" width="500">
 
 举一个简单而经典的例子 -- **台灯和按钮**。
 

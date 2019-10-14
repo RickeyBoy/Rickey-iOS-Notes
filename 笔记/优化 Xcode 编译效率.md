@@ -94,7 +94,7 @@ Swift 默认设置是 Debug 时只编译 active 架构，Build active architectu
 
 而我们来看一看全模块优化的整体过程，包括：分析程序，类型检查，SIL 优化，LLVM 后端。而大多数情况下，前两项都是非常快速的。SIL 优化主要进行的是上文所说的函数內联、函数特殊化等优化，LLVM 后端采用多线程的方式对 SIL 优化的结果进行编译，生成底层代码。
 
-<img src="http://p6z7avd1u.bkt.clouddn.com/image/blog/wmo-detail.png" width="300px" />
+<img src="https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/optimizeCompile/0.png?raw=true" width="300px" />
 
 而设置 `SWIFT_WHOLE_MODULE_OPTIMIZATION = YES`，全模块优化会让**增量编译的颗粒度从 File 级别增大到 Module 级别**。一个只要修改我们项目里的一个文件，想要编译 debug 一下，就又得重新合并文件从头开始编译一次。理论上讲，如果单个 LLVM 线程没有被修改，那么也能利用之前的缓存进行加速。但现实情况是，分析程序、类型检查、SIL 优化肯定会被重新执行一次，而绝大部分情况下 LLVM 也基本得重新执行一次，和第一次编译时间差不多。
 
