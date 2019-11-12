@@ -8,6 +8,30 @@ http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/
 
 
 
+## 步骤
+
+1. 网络请求
+2. 数据解析
+3. 布局计算
+4. cell 展示
+   1. cell 创建
+
+
+
+
+
+
+
+
+
+---
+
+
+
+草稿！！！
+
+
+
 ## 耗时
 
 2.统计了每次UITableView滚动时候比较耗时的操作
