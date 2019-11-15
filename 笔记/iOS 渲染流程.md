@@ -64,7 +64,17 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 #### 屏幕成像
 
-在图像渲染流程结束之后，接下来就需要将得到的像素信息显示在物理屏幕上了。GPU 最后一步渲染结束之后像素信息，被存在帧缓冲器（Framebuffer）中，帧缓冲器再将
+在图像渲染流程结束之后，接下来就需要将得到的像素信息显示在物理屏幕上了。GPU 最后一步渲染结束之后像素信息，被存在帧缓冲器（Framebuffer）中，之后视频控制器（Video Controller）会读取帧缓冲器中的信息，经过数模转换传递给显示器，进行显示。
+
+完整的流程如下图所示：
+
+![renderStructure](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/renderStructure.png)
+
+**Framebuffer 帧缓冲器**
+
+
+
+
 
 
 
