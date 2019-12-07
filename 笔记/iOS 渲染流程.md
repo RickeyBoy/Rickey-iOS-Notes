@@ -64,7 +64,7 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 上图就是一个三角形被渲染的过程中，GPU 所负责的渲染流水线。可以看到简单的三角形绘制就需要大量的计算，如果再有更多更复杂的顶点、颜色、纹理信息（包括 3D 纹理），那么计算量是难以想象的。这也是为什么 GPU 更适合于渲染流程。
 
-#### 屏幕成像
+#### 屏幕成像与卡顿
 
 在图像渲染流程结束之后，接下来就需要将得到的像素信息显示在物理屏幕上了。GPU 最后一步渲染结束之后像素信息，被存在帧缓冲器（Framebuffer）中，之后视频控制器（Video Controller）会读取帧缓冲器中的信息，经过数模转换传递给显示器（Monitor），进行显示。完整的流程如下图所示：
 
@@ -74,7 +74,7 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 ![vsync](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/vsync.png)
 
-电子束扫描的过程中，屏幕就能呈现出对应的结果，每次整个屏幕被扫描完一次后，就相当于呈现了一帧完整的图像。屏幕不断地刷新，不停呈现新的帧，就能呈现出连续的影像。而这个屏幕刷新的频率，就是帧率（Frame per Second，FPS）。由于人眼的视觉暂留效应，当屏幕刷新频率足够高时（FPS 通常是 50 到 60 左右），就能让画面看起来是连续而流畅的。对于 iOS 而言，app 应该尽量保证 60 的 fps 才是最好的体验。
+电子束扫描的过程中，屏幕就能呈现出对应的结果，每次整个屏幕被扫描完一次后，就相当于呈现了一帧完整的图像。屏幕不断地刷新，不停呈现新的帧，就能呈现出连续的影像。而这个屏幕刷新的频率，就是帧率（Frame per Second，FPS）。由于人眼的视觉暂留效应，当屏幕刷新频率足够高时（FPS 通常是 50 到 60 左右），就能让画面看起来是连续而流畅的。对于 iOS 而言，app 应该尽量保证 60 FPS 才是最好的体验。
 
 **屏幕撕裂 Screen Tearing**
 
@@ -90,11 +90,47 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 垂直同步信号（vertical synchronisation，Vsync）相当于给帧缓冲器加锁：当电子束完成一帧的扫描，将要从头开始扫描时，就会发出一个垂直同步信号。只有当视频控制器接收到 Vsync 之后，才会将帧缓冲器中的位图更新为下一帧，这样就能保证每次显示的都是同一帧的画面，因而避免了屏幕撕裂。
 
-但是这种情况下，视频控制器在接受到 Vsync 之后，就要将下一帧的位图传入，这意味着整个 CPU+GPU 的渲染流程都要在一瞬间完成，这是明显不现实的。所以双缓冲机制会增加一个新的备用缓冲器（back buffer）。渲染结果会预先保存在 back buffer 中，在接收到 Vsync 信号的时候，视频控制器会将 back buffer 中的内容置换到 frame buffer 中，此时就能保证置换操作几乎在一瞬间完成。
+但是这种情况下，视频控制器在接受到 Vsync 之后，就要将下一帧的位图传入，这意味着整个 CPU+GPU 的渲染流程都要在一瞬间完成，这是明显不现实的。所以双缓冲机制会增加一个新的备用缓冲器（back buffer）。渲染结果会预先保存在 back buffer 中，在接收到 Vsync 信号的时候，视频控制器会将 back buffer 中的内容置换到 frame buffer 中，此时就能保证置换操作几乎在一瞬间完成（实际上是交换了内存地址）。
 
 ![gpu-double-buffer](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/gpu-double-buffer.png)
 
-**掉帧**
+**掉帧 Jank**
+
+启用 Vsync 信号以及双缓冲机制之后，能够解决屏幕撕裂的问题，但是会引入新的问题：掉帧。如果在接收到 Vsync 之时 CPU 和 GPU 还没有渲染好新的位图，视频控制器就不会去替换 frame buffer 中的位图。这时屏幕就会重新扫描呈现出上一帧一模一样的画面。相当于两个周期显示了同样的画面，这就是所谓掉帧的情况。
+
+![double](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/double.png)
+
+如图所示，A、B 代表两个帧缓冲器，当 B 没有渲染完毕时就接收到了 Vsync 信号，所以屏幕只能再显示相同帧 A，这就发生了第一次的掉帧。
+
+**三缓冲 Triple Buffering**
+
+事实上上述策略还有优化空间。我们注意到在发生掉帧的时候，CPU 和 GPU 有一段时间处于闲置状态：当 A 的内容正在被扫描显示在屏幕上，而 B 的内容已经被渲染好，此时 CPU 和 GPU 就处于闲置状态。那么如果我们增加一个帧缓冲器，就可以利用这段时间进行下一步的渲染，并将渲染结果暂存于新增的帧缓冲器中。
+
+![tripple](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/tripple.png)
+
+如图所示，由于增加了新的帧缓冲器，可以一定程度上地利用掉帧的空档期，合理利用 CPU 和 GPU 性能，从而减少掉帧的次数。
+
+**屏幕卡顿的本质**
+
+手机使用卡顿的直接原因，就是掉帧。前文也说过，屏幕刷新频率必须要足够高才能流畅。对于 iPhone 手机来说，屏幕最大的刷新频率是 60 FPS，一般只要保证 50 FPS 就已经是较好的体验了。但是如果掉帧过多，导致刷新频率过低，就会造成不流畅的使用体验。
+
+这样看来，可以大概总结一下
+
+- 屏幕卡顿的根本原因：CPU 和 GPU 渲染流水线耗时过长，导致掉帧。
+- Vsync 与双缓冲的意义：强制同步屏幕刷新，以掉帧为代价解决屏幕撕裂问题。
+- 三缓冲的意义：合理使用 CPU、GPU 渲染性能，减少掉帧次数。
+
+
+
+## iOS 的渲染原理
+
+#### iOS 渲染框架
+
+![softwareStack](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/softwareStack.png)
+
+iOS App 的图形渲染技术栈，App 使用 Core Graphics、Core Animation、Core Image 等框架来绘制可视化内容，这些软件框架相互之间也有着依赖关系。这些框架都需要通过 OpenGL 来调用 GPU 进行绘制，最终将内容显示到屏幕之上。
+
+
 
 
 
@@ -103,42 +139,6 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 
 ---
-
-
-
-[计算机那些事(8)——图形图像渲染原理](http://chuquan.me/2018/08/26/graphics-rending-principle-gpu/)：硬件方面，GPU 渲染过程，CPU+GPU 架构，屏幕渲染工作流
-
-[iOS 图像渲染原理](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)：渲染技术栈+框架，UIView+CALayer+四层树，CoreAnimation 流水线，动画渲染
-
-[iOS Core Animation: Advanced Techniques中文译本](https://zsisme.gitbooks.io/ios-/content/index.html)：UIView+CAlayer 四层树，寄宿图，图层效果，图层变换，图层动画，图层性能
-
-[深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/)：渲染框架，各框架渲染pipeline，commitTransaction，动画，性能检测思路
-
-[iOS 保持界面流畅的技巧](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)：图像显示原理+卡顿原因，CPU+GPU 资源开销，AsyncDisplayKit 原理（图层和成+异步并发）
-
-[iOS 开发：绘制像素到屏幕](https://segmentfault.com/a/1190000000390012)，[像素如何被绘制到屏幕上（译）](https://blog.jamchenjun.com/2018/01/14/getting-pixels-onto-the-screen-translation.html)
-
-
-
-## 硬件方面
-
-[计算机那些事(8)——图形图像渲染原理](http://chuquan.me/2018/08/26/graphics-rending-principle-gpu/)
-
-- **CPU（Central Processing Unit）**：现代计算机的三大核心部分之一，作为整个系统的运算和控制单元。CPU 内部的流水线结构使其拥有一定程度的并行计算能力。
-- **GPU（Graphics Processing Unit）**：一种可进行绘图运算工作的专用微处理器。GPU 能够生成 2D/3D 的图形图像和视频，从而能够支持基于窗口的操作系统、图形用户界面、视频游戏、可视化图像应用和视频播放。GPU 具有非常强的并行计算能力。
-
-CPU 与 GPU 的区别：[CPU 和 GPU 的区别是什么？ - 虫子君的回答 - 知乎](https://www.zhihu.com/question/19903344/answer/96081382)
-
-GPU 图形渲染流水线：顶点着色器、形状装配、几何着色器、光栅化、片段着色器、测试与混合。英文 + 图示+ 详细介绍 [GPU Rendering Pipeline——GPU渲染流水线简介 - 拓荒犬的文章 - 知乎](https://zhuanlan.zhihu.com/p/61949898)
-
-CPU+GPU的异构系统、工作流：分离式 or 耦合式系统，数据存入显存->CPU 驱动 GPU->GPU 并行处理->传回主存。
-
-屏幕显示原理：CRT 电子枪、HSync+Vsync 信号，双缓冲机制以及掉帧的原因
-
-[iOS 保持界面流畅的技巧](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)：屏幕成像原理CRT + 卡顿原因
-
-[OpenGL 图片从文件渲染到屏幕的过程](https://juejin.im/post/5d732ea96fb9a06b2d77f76a)：屏幕缓冲区 + 离屏缓冲区，iOS 图片显示过程
-
 
 
 ## iOS 渲染架构
@@ -154,6 +154,16 @@ iOS 渲染框架：UIKit，CoreAnimation，CoreGraphics，CoreImage，OpenGLES�
 - [深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/) - 渲染框架详解
 
 UIKit 和 CoreAnimation 的关系
+
+[iOS 图像渲染原理](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)：渲染技术栈+框架，UIView+CALayer+四层树，CoreAnimation 流水线，动画渲染
+
+[iOS Core Animation: Advanced Techniques中文译本](https://zsisme.gitbooks.io/ios-/content/index.html)：UIView+CAlayer 四层树，寄宿图，图层效果，图层变换，图层动画，图层性能
+
+[深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/)：渲染框架，各框架渲染pipeline，commitTransaction，动画，性能检测思路
+
+Advanced Graphics and Animations for iOS Apps：https://joakimliu.github.io/2019/03/02/wwdc-2014-419/
+
+Getting Pixels onto the Screen 中文版：https://www.geek-share.com/detail/2695278535.html
 
 
 
@@ -191,11 +201,17 @@ CALayer 寄宿图：Contents 属性 + Custom Drawing
 
 ## 解决卡顿
 
+卡顿监控：https://github.com/aozhimin/iOS-Monitor-Platform#fps，包括两种监控方案
+
 根据流水线分析性能消耗的主要原因 [iOS 保持界面流畅的技巧](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/) ：
 
 - CPU、GPU 消耗的原因
 - 解决原因
 - todo：一些成熟方案？Texture、IGList 等
+
+使用 Instrument 调试的具体内容，加一些常见解决方案：https://blog.csdn.net/Hello_Hwc/article/details/52331548
+
+
 
 
 
@@ -214,3 +230,33 @@ CALayer 寄宿图：Contents 属性 + Custom Drawing
 - [iOS 保持界面流畅的技巧 - ibireme](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)
 - [Framebuffer - Wiki](https://en.wikipedia.org/wiki/Framebuffer)
 - [Frame Rate (iOS and tvOS)](https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/FrameRate.html)
+- [理解 Vsync - 陈蒙](https://blog.csdn.net/zhaizu/article/details/51882768)
+- [Getting Pixels onto the Screen](https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/)
+
+
+
+---
+
+已使用的资源
+
+
+
+## 硬件方面
+
+[计算机那些事(8)——图形图像渲染原理](http://chuquan.me/2018/08/26/graphics-rending-principle-gpu/)
+
+- **CPU（Central Processing Unit）**：现代计算机的三大核心部分之一，作为整个系统的运算和控制单元。CPU 内部的流水线结构使其拥有一定程度的并行计算能力。
+- **GPU（Graphics Processing Unit）**：一种可进行绘图运算工作的专用微处理器。GPU 能够生成 2D/3D 的图形图像和视频，从而能够支持基于窗口的操作系统、图形用户界面、视频游戏、可视化图像应用和视频播放。GPU 具有非常强的并行计算能力。
+
+CPU 与 GPU 的区别：[CPU 和 GPU 的区别是什么？ - 虫子君的回答 - 知乎](https://www.zhihu.com/question/19903344/answer/96081382)
+
+GPU 图形渲染流水线：顶点着色器、形状装配、几何着色器、光栅化、片段着色器、测试与混合。英文 + 图示+ 详细介绍 [GPU Rendering Pipeline——GPU渲染流水线简介 - 拓荒犬的文章 - 知乎](https://zhuanlan.zhihu.com/p/61949898)
+
+CPU+GPU的异构系统、工作流：分离式 or 耦合式系统，数据存入显存->CPU 驱动 GPU->GPU 并行处理->传回主存。
+
+屏幕显示原理：CRT 电子枪、HSync+Vsync 信号，双缓冲机制以及掉帧的原因
+
+[iOS 保持界面流畅的技巧](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)：屏幕成像原理CRT + 卡顿原因
+
+[OpenGL 图片从文件渲染到屏幕的过程](https://juejin.im/post/5d732ea96fb9a06b2d77f76a)：屏幕缓冲区 + 离屏缓冲区，iOS 图片显示过程
+
