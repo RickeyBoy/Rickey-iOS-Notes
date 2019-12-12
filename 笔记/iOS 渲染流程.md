@@ -122,17 +122,123 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 
 
-## iOS 的渲染原理
-
-#### iOS 渲染框架
+## iOS 的渲染框架
 
 ![softwareStack](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/softwareStack.png)
 
-iOS App 的图形渲染技术栈，App 使用 Core Graphics、Core Animation、Core Image 等框架来绘制可视化内容，这些软件框架相互之间也有着依赖关系。这些框架都需要通过 OpenGL 来调用 GPU 进行绘制，最终将内容显示到屏幕之上。
+iOS 的渲染框架依然符合渲染流水线的基本架构，具体的技术栈如上图所示。在硬件基础之上，iOS 中有 Core Graphics、Core Animation、Core Image、OpenGL 等多种软件框架来绘制内容，在 CPU 与 GPU 之间进行了更高层地封装。
 
+**GPU Driver**：上述软件框架相互之间也有着依赖关系，不过所有框架最终都会通过 OpenGL 连接到 GPU Driver，GPU Driver 是直接和 GPU 交流的代码块，直接与 GPU 连接。
 
+**OpenGL**：是一个提供了 2D 和 3D 图形渲染的 API，它能和 GPU 密切的配合，最高效地利用 GPU 的能力，实现硬件加速渲染。OpenGL的高效实现（利用了图形加速硬件）一般由显示设备厂商提供，而且非常依赖于该厂商提供的硬件。OpenGL 之上扩展出很多东西，如 Core Graphics 等最终都依赖于 OpenGL，有些情况下为了更高的效率，比如游戏程序，甚至会直接调用 OpenGL 的接口。
 
+**Core Graphics**：Core Graphics 是一个强大的二维图像绘制引擎，是 iOS 的核心图形库，常用的比如 CGRect 就定义在这个框架下。
 
+**Core Animation**：在 iOS 上，几乎所有的东西都是通过 Core Animation 绘制出来，它的自由度更高，使用范围也更广。
+
+**Core Image**：Core Image 是一个高性能的图像处理分析的框架，它拥有一系列现成的图像滤镜，能对已存在的图像进行高效的处理。
+
+#### Core Animation
+
+> Render, compose, and animate visual elements. ---- Apple
+
+Core Animation，它本质上可以理解为一个复合引擎，主要职责包含：渲染、构建和实现动画。
+
+通常我们会使用 Core Animation 来高效、方便地实现动画，但是实际上它的前身叫做 Layer Kit，关于动画实现只是它功能中的一部分。对于 iOS app，不论是否直接使用了 Core Animation，它都在底层深度参与了 app 的构建。而对于 OS X app，也可以通过使用 Core Animation 方便地实现部分功能。
+
+![CA](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/CA.png)
+
+Core Animation 是 AppKit 和 UIKit 完美的底层支持，同时也被整合进入 Cocoa 和 Cocoa Touch 的工作流之中，它是 app 界面渲染和构建的最基础架构。 Core Animation 的职责就是尽可能快地组合屏幕上不同的可视内容，这个内容是被分解成独立的 **layer**（iOS 中具体而言就是 CALayer），并且被存储为树状层级结构。这个树也形成了 UIKit 以及在 iOS 应用程序当中你所能在屏幕上看见的一切的基础。
+
+简单来说就是用户能看到的屏幕上的内容都由 CALayer 进行管理。那么 CALayer 究竟是如何进行管理的呢？另外在 iOS 开发过程中，最大量使用的视图控件实际上是 UIView 而不是 CALayer，那么他们两者的关系到底如何呢？
+
+这部分涉及到的内容很多，所以接下来我们单开一个章节，针对 CALayer 进行详细的讲解。
+
+## CALayer 详解
+
+#### contents 属性：存储 bitmap
+
+简单理解，CALayer 就是屏幕显示的基础。那 CALayer 是如何完成的呢？让我们来从源码向下探索一下，在 CALayer.h 中，CALayer 有这样一个属性 contents：
+
+```objective-c
+/** Layer content properties and methods. **/
+
+/* An object providing the contents of the layer, typically a CGImageRef,
+ * but may be something else. (For example, NSImage objects are
+ * supported on Mac OS X 10.6 and later.) Default value is nil.
+ * Animatable. */
+
+@property(nullable, strong) id contents;
+```
+
+> An object providing the contents of the layer, typically a CGImageRef.
+
+contents 提供了 layer 的内容，是一个指针类型，在 iOS 中的类型就是 CGImageRef（在 OS X 中还可以是 NSImage）。而我们进一步查到，Apple 对 CGImageRef 的定义是：
+
+> A bitmap image or image mask.
+
+看到 bitmap，这下我们就可以和之前讲的的渲染流水线联系起来了：实际上，CALayer 中的 contents 属性保存了由设备渲染流水线渲染好的位图 bitmap（通常也被称为 **backing store**），而当设备屏幕进行刷新时，会从 CALayer 中读取生成好的 bitmap，进而呈现到屏幕上。
+
+所以，如果我们在代码中对 CALayer 的 contents 属性进行了设置，比如这样：
+
+```objective-c
+// 注意 CGImage 和 CGImageRef 的关系：
+// typedef struct CGImage CGImageRef;
+layer.contents = (__bridge id)image.CGImage;
+```
+
+那么在运行时，操作系统会调用底层的接口，将 image 通过 CPU+GPU 的渲染流水线渲染得到对应的 bitmap，存储于 CALayer.contents 中，在设备屏幕进行刷新的时候就会读取 bitmap 在屏幕上呈现。
+
+也正因为每次要被渲染的内容是被静态的存储起来的，所以每次渲染时是通过触发调用 `drawRect:` 方法，使用存储好的 bitmap 进行新一轮的展示。
+
+#### UIView 与 CALayer 的关系
+
+UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联系，那么两者之间到底是个什么关系，他们有什么差异？
+
+当然，两者有很多显性的区别，比如是否能够响应点击事件。但为了从根本上彻底搞懂这些问题，我们必须要先搞清楚两者的职责。
+
+> [UIView - Apple](https://developer.apple.com/documentation/uikit/uiview)
+>
+> Views are the fundamental building blocks of your app's user interface, and the `UIView` class defines the behaviors that are common to all views. A view object renders content within its bounds rectangle and handles any interactions with that content.
+
+根据 Apple 的官方文档，UIView 是 app 中的基本组成结构，定义了一些统一的规范。它会负责内容的渲染以及，处理交互事件。具体而言，它负责的事情可以归为下面三类
+
+- Drawing and animation：绘制与动画
+- Layout and subview management：布局与子 view 的管理
+- Event handling：点击事件处理
+
+> [CALayer - Apple](https://developer.apple.com/documentation/quartzcore/calayer)
+>
+> Layers are often used to provide the backing store for views but can also be used without a view to display content. A layer’s main job is to manage the visual content that you provide...
+>
+> If the layer object was created by a view, the view typically assigns itself as the layer’s delegate automatically, and you should not change that relationship.
+
+而从 CALayer 的官方文档中我们可以看出，CALayer 的主要职责是管理内部的可视内容，这也和我们前文所讲的内容吻合。当我们创建一个 UIView 的时候，UIView 会自动创建一个 CALayer，为自身提供存储 bitmap 的地方（也就是前文说的 **backing store**），并将自身固定设置为 CALayer 的代理。
+
+从这儿我们大概总结出下面两个**核心关系**：
+
+1. CALayer 是 UIView 的属性之一，负责渲染和动画，提供可视内容的呈现。
+2. UIView 提供了对 CALayer 部分功能的封装，同时也另外负责了交互事件的处理。
+
+有了这两个最关键的根本关系，那么下面这些经常出现在面试答案里的显性的异同就很好解释了。举几个例子：
+
+**相同的层级结构**：我们对 UIView 的层级结构非常熟悉，由于每个 UIView 都对应 CALayer 负责页面的绘制，所以 CALayer 也具有相应的层级结构。
+
+**部分效果的设置**：因为 UIView 只对 CALayer 的部分功能进行了封装，而另一部分如圆角、阴影、边框等特效都需要通过调用 layer 属性来设置。
+
+**是否响应点击事件**：CALayer 不负责点击事件，所以不响应点击事件，而 UIView 会响应。
+
+**不同继承关系**：CALayer 继承自 NSObject，UIView 由于要负责交互事件，所以继承自 UIResponder。
+
+#### 多个 CALayer 的合成
+
+当我们知道了单个 CALayer 的情况，实际上整个屏幕的显示还需要进行多个 CALayer 的合成。实际情况下，每个 CALayer 都需要被确定其在屏幕中所处的位置，以及对重叠的 CALayer 进行叠加处理。另外对于每个 CALayer 还有一些特殊的视觉效果，如圆角和阴影，甚至是一个对应的蒙版（mask）。蒙版本质上是一个拥有透明度信息的位图，类似于 CALayer 的子图层，CALayer 最终的呈现效果也是进行了蒙版叠加之后的效果。
+
+// TODO: 此处缺一张图 sketch -- 位置、叠加、蒙版
+
+进行了这一系列的处理之后，整个屏幕的内容才能被最终全部呈现出来。不过显而易见，这中间涉及到大量的运算，部分情况下可能会非常耗时，这一点我们在之后的章节中详细说明。
+
+#### Layer Trees
 
 
 
@@ -143,60 +249,44 @@ iOS App 的图形渲染技术栈，App 使用 Core Graphics、Core Animation、C
 
 ## iOS 渲染架构
 
-[iOS 图像渲染原理](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)
-
-iOS 图形渲染技术栈：Display-GPU-Driver-OpenGL-Core...-app
-
-iOS 渲染框架：UIKit，CoreAnimation，CoreGraphics，CoreImage，OpenGLES，Metal。
-
-- [渲染框架详细说明](https://xiaozhuanlan.com/topic/9871534260)
-
-- [深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/) - 渲染框架详解
-
-UIKit 和 CoreAnimation 的关系
-
-[iOS 图像渲染原理](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)：渲染技术栈+框架，UIView+CALayer+四层树，CoreAnimation 流水线，动画渲染
-
-[iOS Core Animation: Advanced Techniques中文译本](https://zsisme.gitbooks.io/ios-/content/index.html)：UIView+CAlayer 四层树，寄宿图，图层效果，图层变换，图层动画，图层性能
-
-[深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/)：渲染框架，各框架渲染pipeline，commitTransaction，动画，性能检测思路
-
-Advanced Graphics and Animations for iOS Apps：https://joakimliu.github.io/2019/03/02/wwdc-2014-419/
-
 Getting Pixels onto the Screen 中文版：https://www.geek-share.com/detail/2695278535.html
 
 
-
-## CALayer 渲染过程
-
-[iOS 图像渲染原理](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)
+## CALayer
 
 UIView 和 CALayer 区别：
 
 1. 框架不同
 2. 进一步的封装
 3. 平行层级关系，职责分离
-4. [CALayer 基础](https://luochenxun.com/ios-calayer-overview/)
+4. [CALayer 基础](https://luochenxun.com/ios-calayer-overview/) **作为最后补充**
 
-CALayer 如何呈现内容：CAlayer=纹理=图片，backing store 包含 contents，两种实现方式
+CALayer 如何呈现内容：
 
-- [调用 drawRect 之后](https://www.jianshu.com/p/c49833c04362)
-- [深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/) - 不同框架的 pipeline
+- [调用 drawRect 之后](https://www.jianshu.com/p/c49833c04362) **作为最后补充**
+- [深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/) - 不同框架的 pipeline **作为最后补充**
 
-CoreAnimation 流水线：CALayer 到 render server 到 GPU 到 Display.
+[iOS Core Animation: Advanced Techniques中文译本](https://zsisme.gitbooks.io/ios-/content/index.html) 
+UIView+CAlayer 四层树，寄宿图，图层效果，图层变换，图层动画，图层性能
+CALayer 寄宿图：Contents 属性 + Custom Drawing
+性能调优 + 高效绘图 + 图像 IO + 图层性能
 
 UIView animation 动画渲染过程：调用，Layout Display Prepare Commit，Render Server
 
 
 
-## CALayer + CoreAnimation
+## CoreAnimation 渲染流水线
 
-[iOS Core Animation: Advanced Techniques中文译本](https://zsisme.gitbooks.io/ios-/content/index.html)
+[iOS 图像渲染原理 - chuquan](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)
 
-CALayer 寄宿图：Contents 属性 + Custom Drawing
+CoreAnimation 流水线：CALayer 到 render server 到 GPU 到 Display.
 
-性能调优 + 高效绘图 + 图像 IO + 图层性能
+CoreAnimation 流水线 https://joakimliu.github.io/2019/03/02/wwdc-2014-419/
 
+
+[iOS 图像渲染原理](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)：渲染技术栈+框架，UIView+CALayer+四层树，CoreAnimation 流水线，动画渲染
+
+[深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/)：渲染框架，各框架渲染pipeline，commitTransaction，动画，性能检测思路
 
 
 ## 解决卡顿
@@ -221,7 +311,7 @@ CALayer 寄宿图：Contents 属性 + Custom Drawing
 
 引用文献：
 
-- [Inside look at modern web browser](https://developers.google.com/web/updates/2018/09/inside-browser-part1)
+- [Inside look at modern web browser - Google](https://developers.google.com/web/updates/2018/09/inside-browser-part1)
 - [1.2CPU和GPU的设计区别 - Magnum Programm Life](https://www.cnblogs.com/biglucky/p/4223565.html)
 - [CUDA编程(三): GPU架构了解一下! - SeanDepp](https://www.jianshu.com/p/87cf95b1faa0)
 - [Graphics pipeline - Wiki](https://en.wikipedia.org/wiki/Graphics_pipeline)
@@ -229,9 +319,13 @@ CALayer 寄宿图：Contents 属性 + Custom Drawing
 - [计算机那些事(8)——图形图像渲染原理 - 楚权的世界](http://chuquan.me/2018/08/26/graphics-rending-principle-gpu/)
 - [iOS 保持界面流畅的技巧 - ibireme](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)
 - [Framebuffer - Wiki](https://en.wikipedia.org/wiki/Framebuffer)
-- [Frame Rate (iOS and tvOS)](https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/FrameRate.html)
+- [Frame Rate (iOS and tvOS) - Apple](https://developer.apple.com/library/archive/documentation/3DDrawing/Conceptual/MTLBestPracticesGuide/FrameRate.html)
 - [理解 Vsync - 陈蒙](https://blog.csdn.net/zhaizu/article/details/51882768)
-- [Getting Pixels onto the Screen](https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/)
+- [Getting Pixels onto the Screen - objc.io](https://www.objc.io/issues/3-views/moving-pixels-onto-the-screen/)
+- [深入理解 iOS Rendering Process - lision](https://lision.me/ios_rendering_process/)
+- [Core Animation Programming Guide - Apple](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreAnimation_guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004514)
+- [iOS Core Animation: Advanced Techniques中文译本](https://zsisme.gitbooks.io/ios-/content/index.html)
+- 
 
 
 
@@ -241,7 +335,7 @@ CALayer 寄宿图：Contents 属性 + Custom Drawing
 
 
 
-## 硬件方面
+### 硬件方面
 
 [计算机那些事(8)——图形图像渲染原理](http://chuquan.me/2018/08/26/graphics-rending-principle-gpu/)
 
@@ -259,4 +353,8 @@ CPU+GPU的异构系统、工作流：分离式 or 耦合式系统，数据存入
 [iOS 保持界面流畅的技巧](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)：屏幕成像原理CRT + 卡顿原因
 
 [OpenGL 图片从文件渲染到屏幕的过程](https://juejin.im/post/5d732ea96fb9a06b2d77f76a)：屏幕缓冲区 + 离屏缓冲区，iOS 图片显示过程
+
+### iOS 渲染流程
+
+[深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/) - 渲染框架详解
 
