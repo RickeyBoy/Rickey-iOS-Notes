@@ -21,6 +21,8 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 而 GPU 拥有更多的计算单元，具有更强的计算能力，同时也具有更多的控制单元。GPU 基于大吞吐量而设计，每一部分缓存都连接着一个流处理器（stream processor），更加适合大规模的并行计算。
 
+
+
 #### 图像渲染流水线
 
 图像渲染流程粗粒度地大概分为下面这些步骤：
@@ -56,6 +58,8 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 - 片段着色器（Fragment Shader）：也叫做 Pixel Shader，这个阶段的目的是给每一个像素 Pixel 赋予正确的颜色。颜色的来源就是之前得到的顶点、纹理、光照等信息。由于需要处理纹理、光照等复杂信息，所以这通常是整个系统的性能瓶颈。
 - 测试与混合（Tests and Blending）：也叫做 Merging 阶段，这个阶段主要处理片段的前后位置以及透明度。这个阶段会检测各个着色片段的深度值 z 坐标，从而判断片段的前后位置，以及是否应该被舍弃。同时也会计算相应的透明度 alpha 值，从而进行片段的混合，得到最终的颜色。
 
+
+
 #### GPU 渲染流水线
 
 上述图像渲染流水线中，除了第一部分 app 处理阶段，后续主要都由 GPU 负责。所以总结一下，GPU 渲染流水线总共有六个步骤，如下图所示：
@@ -63,6 +67,8 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 ![GPUPipeline](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/GPUPipeline.png)
 
 上图就是一个三角形被渲染的过程中，GPU 所负责的渲染流水线。可以看到简单的三角形绘制就需要大量的计算，如果再有更多更复杂的顶点、颜色、纹理信息（包括 3D 纹理），那么计算量是难以想象的。这也是为什么 GPU 更适合于渲染流程。
+
+
 
 #### 屏幕成像与卡顿
 
@@ -122,7 +128,7 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 
 
-## iOS 的渲染框架
+## iOS 中的渲染框架
 
 ![softwareStack](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/softwareStack.png)
 
@@ -138,7 +144,9 @@ iOS 的渲染框架依然符合渲染流水线的基本架构，具体的技术�
 
 **Core Image**：Core Image 是一个高性能的图像处理分析的框架，它拥有一系列现成的图像滤镜，能对已存在的图像进行高效的处理。
 
-#### Core Animation
+
+
+#### Core Animation 是什么
 
 > Render, compose, and animate visual elements. ---- Apple
 
@@ -152,11 +160,9 @@ Core Animation 是 AppKit 和 UIKit 完美的底层支持，同时也被整合�
 
 简单来说就是用户能看到的屏幕上的内容都由 CALayer 进行管理。那么 CALayer 究竟是如何进行管理的呢？另外在 iOS 开发过程中，最大量使用的视图控件实际上是 UIView 而不是 CALayer，那么他们两者的关系到底如何呢？
 
-这部分涉及到的内容很多，所以接下来我们单开一个章节，针对 CALayer 进行详细的讲解。
 
-## CALayer 详解
 
-#### contents 属性：存储 bitmap
+#### CALayer.contents 属性：存储 bitmap
 
 简单理解，CALayer 就是屏幕显示的基础。那 CALayer 是如何完成的呢？让我们来从源码向下探索一下，在 CALayer.h 中，CALayer 有这样一个属性 contents：
 
@@ -189,9 +195,11 @@ layer.contents = (__bridge id)image.CGImage;
 
 那么在运行时，操作系统会调用底层的接口，将 image 通过 CPU+GPU 的渲染流水线渲染得到对应的 bitmap，存储于 CALayer.contents 中，在设备屏幕进行刷新的时候就会读取 bitmap 在屏幕上呈现。
 
-也正因为每次要被渲染的内容是被静态的存储起来的，所以每次渲染时是通过触发调用 `drawRect:` 方法，使用存储好的 bitmap 进行新一轮的展示。
+也正因为每次要被渲染的内容是被静态的存储起来的，所以每次渲染时，Core Animation 会触发调用 `drawRect:` 方法，使用存储好的 bitmap 进行新一轮的展示。
 
-#### UIView 与 CALayer 的关系
+
+
+#### CALayer 与 UIView 的关系
 
 UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联系，那么两者之间到底是个什么关系，他们有什么差异？
 
@@ -222,15 +230,33 @@ UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联�
 
 有了这两个最关键的根本关系，那么下面这些经常出现在面试答案里的显性的异同就很好解释了。举几个例子：
 
-**相同的层级结构**：我们对 UIView 的层级结构非常熟悉，由于每个 UIView 都对应 CALayer 负责页面的绘制，所以 CALayer 也具有相应的层级结构。
+- **相同的层级结构**：我们对 UIView 的层级结构非常熟悉，由于每个 UIView 都对应 CALayer 负责页面的绘制，所以 CALayer 也具有相应的层级结构。
 
-**部分效果的设置**：因为 UIView 只对 CALayer 的部分功能进行了封装，而另一部分如圆角、阴影、边框等特效都需要通过调用 layer 属性来设置。
+- **部分效果的设置**：因为 UIView 只对 CALayer 的部分功能进行了封装，而另一部分如圆角、阴影、边框等特效都需要通过调用 layer 属性来设置。
 
-**是否响应点击事件**：CALayer 不负责点击事件，所以不响应点击事件，而 UIView 会响应。
+- **是否响应点击事件**：CALayer 不负责点击事件，所以不响应点击事件，而 UIView 会响应。
 
-**不同继承关系**：CALayer 继承自 NSObject，UIView 由于要负责交互事件，所以继承自 UIResponder。
+- **不同继承关系**：CALayer 继承自 NSObject，UIView 由于要负责交互事件，所以继承自 UIResponder。
 
-#### 多个 CALayer 的合成
+当然还剩最后一个问题，为什么要将 CALayer 独立出来，直接使用 UIView 统一管理不行吗？为什么不用一个统一的对象来处理所有事情呢？
+
+这样设计的主要原因就是为了职责分离，拆分功能，方便代码的复用。通过 Core Animation 框架来负责可视内容的呈现，这样在 iOS 和 OS X 上都可以使用 Core Animation 进行渲染。与此同时，两个系统还可以根据交互规则的不同来进一步封装统一的控件，比如 iOS 有 UIKit 和 UIView，OS X 则是AppKit 和 NSView。
+
+
+
+## Core Animation 渲染流水线
+
+当我们了解了 Core Animation 以及 CALayer 的基本知识后，接下来我们来看下 Core Animation 的渲染流水线。
+
+![CApipeline](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/CApipeline.png)
+
+整个流水线一共有下面几个步骤：
+
+**Handle Events**：这个过程中会先处理点击事件，这个过程中有可能会需要改变页面的布局和界面层次，因此需要先完成相应的
+
+
+
+
 
 当我们知道了单个 CALayer 的情况，实际上整个屏幕的显示还需要进行多个 CALayer 的合成。实际情况下，每个 CALayer 都需要被确定其在屏幕中所处的位置，以及对重叠的 CALayer 进行叠加处理。另外对于每个 CALayer 还有一些特殊的视觉效果，如圆角和阴影，甚至是一个对应的蒙版（mask）。蒙版本质上是一个拥有透明度信息的位图，类似于 CALayer 的子图层，CALayer 最终的呈现效果也是进行了蒙版叠加之后的效果。
 
@@ -238,7 +264,7 @@ UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联�
 
 进行了这一系列的处理之后，整个屏幕的内容才能被最终全部呈现出来。不过显而易见，这中间涉及到大量的运算，部分情况下可能会非常耗时，这一点我们在之后的章节中详细说明。
 
-#### Layer Trees
+
 
 
 
@@ -251,6 +277,19 @@ UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联�
 
 Getting Pixels onto the Screen 中文版：https://www.geek-share.com/detail/2695278535.html
 
+## CoreAnimation 渲染流水线
+
+[iOS 图像渲染原理 - chuquan](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)
+
+CoreAnimation 流水线：CALayer 到 render server 到 GPU 到 Display.
+
+CoreAnimation 流水线 WWDC https://joakimliu.github.io/2019/03/02/wwdc-2014-419/
+
+WWDC：https://ustcqidi.github.io/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/
+
+渲染技术栈+框架，UIView+CALayer+四层树，CoreAnimation 流水线，动画渲染
+
+[深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/)：渲染框架，各框架渲染pipeline，commitTransaction，动画，性能检测思路
 
 ## CALayer
 
@@ -273,20 +312,9 @@ CALayer 寄宿图：Contents 属性 + Custom Drawing
 
 UIView animation 动画渲染过程：调用，Layout Display Prepare Commit，Render Server
 
+#### Layer Trees 是什么（不用）
 
-
-## CoreAnimation 渲染流水线
-
-[iOS 图像渲染原理 - chuquan](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)
-
-CoreAnimation 流水线：CALayer 到 render server 到 GPU 到 Display.
-
-CoreAnimation 流水线 https://joakimliu.github.io/2019/03/02/wwdc-2014-419/
-
-
-[iOS 图像渲染原理](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)：渲染技术栈+框架，UIView+CALayer+四层树，CoreAnimation 流水线，动画渲染
-
-[深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/)：渲染框架，各框架渲染pipeline，commitTransaction，动画，性能检测思路
+https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreAnimation_guide/CoreAnimationBasics/CoreAnimationBasics.html#//apple_ref/doc/uid/TP40004514-CH2-SW3
 
 
 ## 解决卡顿
@@ -300,6 +328,8 @@ CoreAnimation 流水线 https://joakimliu.github.io/2019/03/02/wwdc-2014-419/
 - todo：一些成熟方案？Texture、IGList 等
 
 使用 Instrument 调试的具体内容，加一些常见解决方案：https://blog.csdn.net/Hello_Hwc/article/details/52331548
+
+[WWDC 部分解决卡顿的方法](https://github.com/100mango/zen/blob/master/WWDC心得：Advanced Graphics and Animations for iOS Apps/Advanced Graphics and Animations for iOS Apps.md)
 
 
 
@@ -326,35 +356,4 @@ CoreAnimation 流水线 https://joakimliu.github.io/2019/03/02/wwdc-2014-419/
 - [Core Animation Programming Guide - Apple](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreAnimation_guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004514)
 - [iOS Core Animation: Advanced Techniques中文译本](https://zsisme.gitbooks.io/ios-/content/index.html)
 - 
-
-
-
----
-
-已使用的资源
-
-
-
-### 硬件方面
-
-[计算机那些事(8)——图形图像渲染原理](http://chuquan.me/2018/08/26/graphics-rending-principle-gpu/)
-
-- **CPU（Central Processing Unit）**：现代计算机的三大核心部分之一，作为整个系统的运算和控制单元。CPU 内部的流水线结构使其拥有一定程度的并行计算能力。
-- **GPU（Graphics Processing Unit）**：一种可进行绘图运算工作的专用微处理器。GPU 能够生成 2D/3D 的图形图像和视频，从而能够支持基于窗口的操作系统、图形用户界面、视频游戏、可视化图像应用和视频播放。GPU 具有非常强的并行计算能力。
-
-CPU 与 GPU 的区别：[CPU 和 GPU 的区别是什么？ - 虫子君的回答 - 知乎](https://www.zhihu.com/question/19903344/answer/96081382)
-
-GPU 图形渲染流水线：顶点着色器、形状装配、几何着色器、光栅化、片段着色器、测试与混合。英文 + 图示+ 详细介绍 [GPU Rendering Pipeline——GPU渲染流水线简介 - 拓荒犬的文章 - 知乎](https://zhuanlan.zhihu.com/p/61949898)
-
-CPU+GPU的异构系统、工作流：分离式 or 耦合式系统，数据存入显存->CPU 驱动 GPU->GPU 并行处理->传回主存。
-
-屏幕显示原理：CRT 电子枪、HSync+Vsync 信号，双缓冲机制以及掉帧的原因
-
-[iOS 保持界面流畅的技巧](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/)：屏幕成像原理CRT + 卡顿原因
-
-[OpenGL 图片从文件渲染到屏幕的过程](https://juejin.im/post/5d732ea96fb9a06b2d77f76a)：屏幕缓冲区 + 离屏缓冲区，iOS 图片显示过程
-
-### iOS 渲染流程
-
-[深入理解 iOS Rendering Process](https://lision.me/ios_rendering_process/) - 渲染框架详解
 
