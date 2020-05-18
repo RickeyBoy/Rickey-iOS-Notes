@@ -442,14 +442,14 @@ view.layer.masksToBounds = true // 触发离屏渲染的原因
 
 总结一下，下面几种情况会触发离屏渲染：
 
-1. Any layer with a mask (`layer.mask`) 
-2. Any layer with `layer.masksToBounds` / `view.clipsToBounds` being true
-3. Any layer with `layer.allowsGroupOpacity` set to YES and `layer.opacity` is less than 1.0
-4. Any layer with a drop shadow (`layer.shadow*`). (how to fix: https://markpospesel.wordpress.com/tag/performance/)
-5. Any layer with `layer.shouldRasterize` being true
-6. Text (any kind, including `UILabel`, `CATextLayer`, `Core Text`, etc).
+1. 使用了 mask 的 layer (`layer.mask`) 
+2. 需要进行裁剪的 layer (`layer.masksToBounds` / `view.clipsToBounds`)
+3. 设置了组透明度为 YES，并且透明度不为 1 的 layer (`layer.allowsGroupOpacity`/`layer.opacity`)
+4. 添加了投影的 layer (`layer.shadow*`)
+5. 采用了光栅化的 layer (`layer.shouldRasterize`)
+6. 绘制了文字的 layer (`UILabel`, `CATextLayer`, `Core Text` 等)
 
-需要注意的是，重写 `drawRect:` 方法并不会触发离屏渲染。前文中我们提到过，重写 `drawRect:` 会将 GPU 中的渲染操作转移到 CPU 中完成，并且需要额外开辟内存空间。但根据[苹果工程师的说法](https://lobste.rs/s/ckm4uw/performance_minded_take_on_ios_design#c_itdkfh)，这和标准意义上的离屏渲染并不一样，在 Instrument 中开启 Color offscreen rendered yellow 调试时也会发现这并不会被判断为离屏渲染。
+不过，需要注意的是，重写 `drawRect:` 方法并不会触发离屏渲染。前文中我们提到过，重写 `drawRect:` 会将 GPU 中的渲染操作转移到 CPU 中完成，并且需要额外开辟内存空间。但根据[苹果工程师的说法](https://lobste.rs/s/ckm4uw/performance_minded_take_on_ios_design#c_itdkfh)，这和标准意义上的离屏渲染并不一样，在 Instrument 中开启 Color offscreen rendered yellow 调试时也会发现这并不会被判断为离屏渲染。
 
 
 
@@ -519,6 +519,9 @@ view.layer.masksToBounds = true // 触发离屏渲染的原因
 10. **TODO 5 - 这几个 buffer 是什么？会需要异步或者等到下一个 runloop 吗？**
 11. 利用没用完的文档：https://academy.realm.io/posts/tryswift-tim-oliver-advanced-graphics-with-core-animation/，https://zhuanlan.zhihu.com/p/72653360 即刻知乎，[https://github.com/100mango/zen/blob/master/WWDC%E5%BF%83%E5%BE%97%EF%BC%9AAdvanced%20Graphics%20and%20Animations%20for%20iOS%20Apps/Advanced%20Graphics%20and%20Animations%20for%20iOS%20Apps.md](https://github.com/100mango/zen/blob/master/WWDC心得：Advanced Graphics and Animations for iOS Apps/Advanced Graphics and Animations for iOS Apps.md) mongo github，WWDC 219_image_and_graphics_best_practices.pdf 文档
 12. 迁移面试问题到这个文档中
+13. CPU 降频的问题
+14. Offscreen buffer 和 framebuffer 在哪儿，切换成本在哪儿
+15. 圆角扩展类，如果避免？去整理一下直播间的
 
 
 
@@ -554,63 +557,6 @@ CPU or GPU &降低使用率节约能耗 & Time Profiler instrument
 想象不到的层次结构了解实际的视图层次结构Xcode View Debugger
 
 ![image-20200319163703553](/Users/rickey/Library/Application Support/typora-user-images/image-20200319163703553.png)
-
-
-
-
-
-
-
-
-
-
-
----
-
-
-
-
-## 解决卡顿
-
-卡顿监控：https://github.com/aozhimin/iOS-Monitor-Platform#fps，包括两种监控方案
-
-根据流水线分析性能消耗的主要原因 [iOS 保持界面流畅的技巧](https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/) ：
-
-- CPU、GPU 消耗的原因
-- 解决原因
-- todo：一些成熟方案？Texture、IGList 等
-
-使用 Instrument 调试的具体内容，加一些常见解决方案：https://blog.csdn.net/Hello_Hwc/article/details/52331548
-
-[WWDC 部分解决卡顿的方法](https://github.com/100mango/zen/blob/master/WWDC心得：Advanced Graphics and Animations for iOS Apps/Advanced Graphics and Animations for iOS Apps.md)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -665,5 +611,6 @@ CPU or GPU &降低使用率节约能耗 & Time Profiler instrument
 - [iOS 图像渲染原理 - chuquan](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)
 - [Texture - Corner Rounding](https://texturegroup.org/docs/corner-rounding.html)
 - [Mastering Offscreen Render - seedante](https://github.com/seedante/iOS-Note/wiki/Mastering-Offscreen-Render)
-- [Offscreen rendering / Rendering on the CPU - Stack Overflow](https://stackoverflow.com/a/35292291/12472866)
+- [关于iOS离屏渲染的深入研究](https://zhuanlan.zhihu.com/p/72653360)
+- [Offscreen rendering / Rendering on the CPU - Stack Overflow](https://stackoverflow.com/a/35292291/124/72866)
 
