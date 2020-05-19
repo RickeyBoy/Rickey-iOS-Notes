@@ -538,7 +538,6 @@ view.layer.masksToBounds = true // 触发离屏渲染的原因
 - [Core Animation Programming Guide - Apple](https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreAnimation_guide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40004514)
 - [iOS Core Animation: Advanced Techniques中文译本](https://zsisme.gitbooks.io/ios-/content/index.html)
 - [Advanced Graphics and Animations for iOS Apps - Joakim](https://joakimliu.github.io/2019/03/02/wwdc-2014-419/)
-- [100mongo - github](https://github.com/100mango/zen/blob/master/WWDC心得：Advanced Graphics and Animations for iOS Apps/Advanced Graphics and Animations for iOS Apps.md)
 - [iOS 图像渲染原理 - chuquan](http://chuquan.me/2018/09/25/ios-graphics-render-principle/)
 - [Texture - Corner Rounding](https://texturegroup.org/docs/corner-rounding.html)
 - [Mastering Offscreen Render - seedante](https://github.com/seedante/iOS-Note/wiki/Mastering-Offscreen-Render)
