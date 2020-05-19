@@ -8,7 +8,7 @@ iOS 学习过程中的一些收获
 
 ### iOS 基础沉淀
 
-- [iOS 渲染全解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Rendering.md)
+- [iOS Rendering 渲染全解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Rendering.md)
 - [iOS Memory 内存详解](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Memory.md)
 - [iOS 生命周期的缺失和错乱](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20生命周期的缺失和错乱.md)
 - [Singleton - Swift 中的单例](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/Singleton%20-%20Swift%20%E4%B8%AD%E7%9A%84%E5%8D%95%E4%BE%8B.md)
