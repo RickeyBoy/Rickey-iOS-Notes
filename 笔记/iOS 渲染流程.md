@@ -4,7 +4,7 @@
 >
 > 希望能对大家有点帮助~
 
-![catalog](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/catalog.png)
+![catalog](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/catalog.png?raw=true)
 
 
 
@@ -14,14 +14,14 @@
 
 对于现代计算机系统，简单来说可以大概视作三层架构：硬件、操作系统与进程。对于移动端来说，进程就是 app，而 CPU 与 GPU 是硬件层面的重要组成部分。CPU 与 GPU 提供了计算能力，通过操作系统被 app 调用。
 
-![CPUGPU](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/CPUGPU.png)
+![CPUGPU](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/CPUGPU.png?raw=true)
 
 - **CPU（Central Processing Unit）**：现代计算机整个系统的运算核心、控制核心。
 - **GPU（Graphics Processing Unit）**：可进行绘图运算工作的专用微处理器，是连接计算机和显示终端的纽带。
 
 CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同的应用场景。CPU 是运算核心与控制核心，需要有很强的运算通用性，兼容各种数据类型，同时也需要能处理大量不同的跳转、中断等指令，因此 CPU 的内部结构更为复杂。而 GPU 则面对的是类型统一、更加单纯的运算，也不需要处理复杂的指令，但也肩负着更大的运算任务。
 
-![architecture](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/architecture.png)
+![architecture](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/architecture.png?raw=true)
 
 因此，CPU 与 GPU 的架构也不同。因为 CPU 面临的情况更加复杂，因此从上图中也可以看出，CPU 拥有更多的缓存空间 Cache 以及复杂的控制单元，计算能力并不是 CPU 的主要诉求。CPU 是设计目标是低时延，更多的高速缓存也意味着可以更快地访问数据；同时复杂的控制单元也能更快速地处理逻辑分支，更适合串行计算。
 
@@ -33,11 +33,11 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 图像渲染流程粗粒度地大概分为下面这些步骤：
 
-![GraphicsPipeline](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/GraphicsPipeline.png)
+![GraphicsPipeline](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/GraphicsPipeline.png?raw=true)
 
 上述图像渲染流水线中，除了第一部分 Application 阶段，后续主要都由 GPU 负责，为了方便后文讲解，先将 GPU 的渲染流程图展示出来：
 
-![GPUPipeline](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/GPUPipeline.png)
+![GPUPipeline](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/GPUPipeline.png?raw=true)
 
 上图就是一个三角形被渲染的过程中，GPU 所负责的渲染流水线。可以看到简单的三角形绘制就需要大量的计算，如果再有更多更复杂的顶点、颜色、纹理信息（包括 3D 纹理），那么计算量是难以想象的。这也是为什么 GPU 更适合于渲染流程。
 
@@ -59,7 +59,7 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 光栅化的主要目的是将几何渲染之后的图元信息，转换为一系列的像素，以便后续显示在屏幕上。这个阶段中会根据图元信息，计算出每个图元所覆盖的像素信息等，从而将像素划分成不同的部分。
 
-![rasterization](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/rasterization.png)
+![rasterization](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/rasterization.png?raw=true)
 
 一种简单的划分就是根据中心点，如果像素的中心点在图元内部，那么这个像素就属于这个图元。如上图所示，深蓝色的线就是图元信息所构建出的三角形；而通过是否覆盖中心点，可以遍历出所有属于该图元的所有像素，即浅蓝色部分。
 
@@ -78,11 +78,11 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 在图像渲染流程结束之后，接下来就需要将得到的像素信息显示在物理屏幕上了。GPU 最后一步渲染结束之后像素信息，被存在帧缓冲器（Framebuffer）中，之后视频控制器（Video Controller）会读取帧缓冲器中的信息，经过数模转换传递给显示器（Monitor），进行显示。完整的流程如下图所示：
 
-![renderStructure](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/renderStructure.png)
+![renderStructure](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/renderStructure.png?raw=true)
 
 经过 GPU 处理之后的像素集合，也就是位图，会被帧缓冲器缓存起来，供之后的显示使用。显示器的电子束会从屏幕的左上角开始逐行扫描，屏幕上的每个点的图像信息都从帧缓冲器中的位图进行读取，在屏幕上对应地显示。扫描的流程如下图所示：
 
-![vsync](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/vsync.png)
+![vsync](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/vsync.png?raw=true)
 
 电子束扫描的过程中，屏幕就能呈现出对应的结果，每次整个屏幕被扫描完一次后，就相当于呈现了一帧完整的图像。屏幕不断地刷新，不停呈现新的帧，就能呈现出连续的影像。而这个屏幕刷新的频率，就是帧率（Frame per Second，FPS）。由于人眼的视觉暂留效应，当屏幕刷新频率足够高时（FPS 通常是 50 到 60 左右），就能让画面看起来是连续而流畅的。对于 iOS 而言，app 应该尽量保证 60 FPS 才是最好的体验。
 
@@ -92,7 +92,7 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 在这种单一缓存的模式下，最理想的情况就是一个流畅的流水线：每次电子束从头开始新的一帧的扫描时，CPU+GPU 对于该帧的渲染流程已经结束，渲染好的位图已经放入帧缓冲器中。但这种完美的情况是非常脆弱的，很容易产生屏幕撕裂：
 
-![tearing](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/tearing.jpg)
+![tearing](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/tearing.jpg?raw=true)
 
 CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始扫描新的一帧时，位图还没有渲染好，而是在扫描到屏幕中间时才渲染完成，被放入帧缓冲器中 ---- 那么已扫描的部分就是上一帧的画面，而未扫描的部分则会显示新的一帧图像，这就造成屏幕撕裂。
 
@@ -106,7 +106,7 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 但是这种情况下，视频控制器在接受到 Vsync 之后，就要将下一帧的位图传入，这意味着整个 CPU+GPU 的渲染流程都要在一瞬间完成，这是明显不现实的。所以双缓冲机制会增加一个新的备用缓冲器（back buffer）。渲染结果会预先保存在 back buffer 中，在接收到 Vsync 信号的时候，视频控制器会将 back buffer 中的内容置换到 frame buffer 中，此时就能保证置换操作几乎在一瞬间完成（实际上是交换了内存地址）。
 
-![gpu-double-buffer](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/gpu-double-buffer.png)
+![gpu-double-buffer](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/gpu-double-buffer.png?raw=true)
 
 
 
@@ -114,7 +114,7 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 启用 Vsync 信号以及双缓冲机制之后，能够解决屏幕撕裂的问题，但是会引入新的问题：掉帧。如果在接收到 Vsync 之时 CPU 和 GPU 还没有渲染好新的位图，视频控制器就不会去替换 frame buffer 中的位图。这时屏幕就会重新扫描呈现出上一帧一模一样的画面。相当于两个周期显示了同样的画面，这就是所谓掉帧的情况。
 
-![double](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/double.png)
+![double](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/double.png?raw=true)
 
 如图所示，A、B 代表两个帧缓冲器，当 B 没有渲染完毕时就接收到了 Vsync 信号，所以屏幕只能再显示相同帧 A，这就发生了第一次的掉帧。
 
@@ -124,7 +124,7 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 事实上上述策略还有优化空间。我们注意到在发生掉帧的时候，CPU 和 GPU 有一段时间处于闲置状态：当 A 的内容正在被扫描显示在屏幕上，而 B 的内容已经被渲染好，此时 CPU 和 GPU 就处于闲置状态。那么如果我们增加一个帧缓冲器，就可以利用这段时间进行下一步的渲染，并将渲染结果暂存于新增的帧缓冲器中。
 
-![tripple](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/tripple.png)
+![tripple](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/tripple.png?raw=true)
 
 如图所示，由于增加了新的帧缓冲器，可以一定程度上地利用掉帧的空档期，合理利用 CPU 和 GPU 性能，从而减少掉帧的次数。
 
@@ -144,7 +144,7 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 ## 3. iOS 中的渲染框架
 
-![softwareStack](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/softwareStack.png)
+![softwareStack](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/softwareStack.png?raw=true)
 
 iOS 的渲染框架依然符合渲染流水线的基本架构，具体的技术栈如上图所示。在硬件基础之上，iOS 中有 Core Graphics、Core Animation、Core Image、OpenGL 等多种软件框架来绘制内容，在 CPU 与 GPU 之间进行了更高层地封装。
 
@@ -170,7 +170,7 @@ Core Animation，它本质上可以理解为一个复合引擎，主要职责包
 
 通常我们会使用 Core Animation 来高效、方便地实现动画，但是实际上它的前身叫做 Layer Kit，关于动画实现只是它功能中的一部分。对于 iOS app，不论是否直接使用了 Core Animation，它都在底层深度参与了 app 的构建。而对于 OS X app，也可以通过使用 Core Animation 方便地实现部分功能。
 
-![CA](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/CA.png)
+![CA](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/CA.png?raw=true)
 
 Core Animation 是 AppKit 和 UIKit 完美的底层支持，同时也被整合进入 Cocoa 和 Cocoa Touch 的工作流之中，它是 app 界面渲染和构建的最基础架构。 Core Animation 的职责就是尽可能快地组合屏幕上不同的可视内容，这个内容是被分解成独立的 **layer**（iOS 中具体而言就是 CALayer），并且被存储为树状层级结构。这个树也形成了 UIKit 以及在 iOS 应用程序当中你所能在屏幕上看见的一切的基础。
 
@@ -239,7 +239,7 @@ UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联�
 
 而从 CALayer 的官方文档中我们可以看出，CALayer 的主要职责是管理内部的可视内容，这也和我们前文所讲的内容吻合。当我们创建一个 UIView 的时候，UIView 会自动创建一个 CALayer，为自身提供存储 bitmap 的地方（也就是前文说的 **backing store**），并将自身固定设置为 CALayer 的代理。
 
-![uiview_calayer](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/uiview_calayer.png)
+![uiview_calayer](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/uiview_calayer.png?raw=true)
 
 从这儿我们大概总结出下面两个**核心关系**：
 
@@ -268,7 +268,7 @@ UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联�
 
 当我们了解了 Core Animation 以及 CALayer 的基本知识后，接下来我们来看下 Core Animation 的渲染流水线。
 
-![CApipeline](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/CApipeline.png)
+![CApipeline](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/CApipeline.png?raw=true)
 
 整个流水线一共有下面几个步骤：
 
@@ -325,7 +325,7 @@ UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联�
 
 #### Rendering Pass： Render Server 的具体操作
 
-![rendering](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/rendering.png)
+![rendering](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/rendering.png?raw=true)
 
 Render Server 通常是 OpenGL 或者是 Metal。以 OpenGL 为例，那么上图主要是 GPU 中执行的操作，具体主要包括：
 
@@ -350,13 +350,13 @@ Render Server 通常是 OpenGL 或者是 Metal。以 OpenGL 为例，那么上�
 
 根据前文，简化来看，通常的渲染流程是这样的：
 
-![offscreen1](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/offscreen1.png)
+![offscreen1](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/offscreen1.png?raw=true)
 
 App 通过 CPU 和 GPU 的合作，不停地将内容渲染完成放入 Framebuffer 帧缓冲器中，而显示屏幕不断地从 Framebuffer 中获取内容，显示实时的内容。
 
 而离屏渲染的流程是这样的：
 
-![offscreen2](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/offscreen2.png)
+![offscreen2](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/offscreen2.png?raw=true)
 
 与普通情况下 GPU 直接将渲染好的内容放入 Framebuffer 中不同，需要先额外创建离屏渲染缓冲区 Offscreen Buffer，将提前渲染好的内容放入其中，等到合适的时机再将 Offscreen Buffer 中的内容进一步叠加、渲染，完成后将结果切换到 Framebuffer 中。
 
@@ -383,13 +383,13 @@ App 通过 CPU 和 GPU 的合作，不停地将内容渲染完成放入 Framebuf
 
 最常见的情形之一就是：使用了 mask 蒙版。
 
-![masking](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/masking.jpg)
+![masking](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/masking.jpg?raw=true)
 
 如图所示，由于最终的内容是由两层渲染结果叠加，所以必须要利用额外的内存空间对中间的渲染结果进行保存，因此系统会默认触发离屏渲染。
 
 又比如下面这个例子，iOS 8 开始提供的模糊特效 UIBlurEffectView：
 
-![UIVisualEffectView](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/UIVisualEffectView.png)
+![UIVisualEffectView](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/UIVisualEffectView.png?raw=true)
 
 整个模糊过程分为多步：Pass 1 先渲染需要模糊的内容本身，Pass 2 对内容进行缩放，Pass 3 4 分别对上一步内容进行横纵方向的模糊操作，最后一步用模糊后的结果叠加合成，最终实现完整的模糊特效。
 
@@ -420,7 +420,7 @@ App 通过 CPU 和 GPU 的合作，不停地将内容渲染完成放入 Framebuf
 
 通常来讲，设置了 layer 的圆角效果之后，会自动触发离屏渲染。但是究竟什么情况下设置圆角才会触发离屏渲染呢？
 
-![layer_detail](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/layer_detail.png)
+![layer_detail](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/layer_detail.png?raw=true)
 
 如上图所示，layer 由三层组成，我们设置圆角通常会首先像下面这行代码一样进行设置：
 
@@ -440,7 +440,7 @@ view.layer.masksToBounds = true // 触发离屏渲染的原因
 
 所以，Texture 也提出在没有必要使用圆角裁剪的时候，尽量不去触发离屏渲染而影响效率：
 
-![corner-rounding-overlap](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/corner-rounding-overlap.png)
+![corner-rounding-overlap](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/corner-rounding-overlap.png?raw=true)
 
 #### 离屏渲染的具体逻辑
 
@@ -448,15 +448,15 @@ view.layer.masksToBounds = true // 触发离屏渲染的原因
 
 图层的叠加绘制大概遵循“画家算法”，在这种算法下会按层绘制，首先绘制距离较远的场景，然后用绘制距离较近的场景覆盖较远的部分。
 
-![painter](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/painter.png)
+![painter](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/painter.png?raw=true)
 
 在普通的 layer 绘制中，上层的 sublayer 会覆盖下层的 sublayer，下层 sublayer 绘制完之后就可以抛弃了，从而节约空间提高效率。所有 sublayer 依次绘制完毕之后，整个绘制过程完成，就可以进行后续的呈现了。假设我们需要绘制一个三层的 sublayer，不设置裁剪和圆角，那么整个绘制过程就如下图所示：
 
-![normal](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/normal.png)
+![normal](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/normal.png?raw=true)
 
 而当我们设置了 cornerRadius 以及 masksToBounds 进行圆角 + 裁剪时，如前文所述，masksToBounds 裁剪属性会应用到所有的 sublayer 上。这也就意味着所有的 sublayer 必须要重新被应用一次圆角+裁剪，这也就意味着所有的 sublayer 在第一次被绘制完之后，并不能立刻被丢弃，而必须要被保存在 Offscreen buffer 中等待下一轮圆角+裁剪，这也就诱发了离屏渲染，具体过程如下：
 
-![corner](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/corner.png)
+![corner](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/corner.png?raw=true)
 
 实际上不只是圆角+裁剪，如果设置了透明度+组透明（`layer.allowsGroupOpacity`+`layer.opacity`），阴影属性（`shadowOffset` 等）都会产生类似的效果，因为组透明度、阴影都是和裁剪类似的，会作用与 layer 以及其所有 sublayer 上，这就导致必然会引起离屏渲染。
 
