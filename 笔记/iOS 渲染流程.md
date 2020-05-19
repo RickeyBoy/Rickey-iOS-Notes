@@ -2,6 +2,12 @@
 
 
 
+#### 目录
+
+
+
+
+
 ## 计算机渲染原理
 
 #### CPU 与 GPU 的架构
@@ -436,6 +442,39 @@ view.layer.masksToBounds = true // 触发离屏渲染的原因
 
 ![corner-rounding-overlap](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/corner-rounding-overlap.png)
 
+#### 离屏渲染的具体逻辑
+
+刚才说了圆角加上 masksToBounds 的时候，因为 masksToBounds 会对 layer 上的所有内容进行裁剪，从而诱发了离屏渲染，那么这个过程具体是怎么回事呢，下面我们来仔细讲一下。
+
+图层的叠加绘制大概遵循“画家算法”，在这种算法下会按层绘制，首先绘制距离较远的场景，然后用绘制距离较近的场景覆盖较远的部分。
+
+![painter](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/painter.png)
+
+在普通的 layer 绘制中，上层的 sublayer 会覆盖下层的 sublayer，下层 sublayer 绘制完之后就可以抛弃了，从而节约空间提高效率。所有 sublayer 依次绘制完毕之后，整个绘制过程完成，就可以进行后续的呈现了。假设我们需要绘制一个三层的 sublayer，不设置裁剪和圆角，那么整个绘制过程就如下图所示：
+
+![normal](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/normal.png)
+
+而当我们设置了 cornerRadius 以及 masksToBounds 进行圆角 + 裁剪时，如前文所述，masksToBounds 裁剪属性会应用到所有的 sublayer 上。这也就意味着所有的 sublayer 必须要重新被应用一次圆角+裁剪，这也就意味着所有的 sublayer 在第一次被绘制完之后，并不能立刻被丢弃，而必须要被保存在 Offscreen buffer 中等待下一轮圆角+裁剪，这也就诱发了离屏渲染，具体过程如下：
+
+![corner](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/corner.png)
+
+实际上不只是圆角+裁剪，如果设置了透明度+组透明（`layer.allowsGroupOpacity`+`layer.opacity`），阴影属性（`shadowOffset` 等）都会产生类似的效果，因为组透明度、阴影都是和裁剪类似的，会作用与 layer 以及其所有 sublayer 上，这就导致必然会引起离屏渲染。
+
+
+
+#### 避免圆角离屏渲染
+
+除了尽量减少圆角裁剪的使用，还有什么别的办法可以避免圆角+裁剪引起的离屏渲染吗？
+
+由于刚才我们提到，圆角引起离屏渲染的本质是裁剪的叠加，导致 masksToBounds 对 layer 以及所有 sublayer 进行二次处理。那么我们只要避免使用 masksToBounds 进行二次处理，而是对所有的 sublayer 进行预处理，就可以只进行“画家算法”，用一次叠加就完成绘制。
+
+那么可行的实现方法大概有下面几种：
+
+1. 【换资源】直接使用带圆角的图片，或者替换背景色为带圆角的纯色背景图，从而避免使用圆角裁剪。不过这种方法需要依赖具体情况，并不通用。
+2. 【mask】再增加一个和背景色相同的遮罩 mask 覆盖在最上层，盖住四个角，营造出圆角的形状。但这种方式难以解决背景色为图片或渐变色的情况。
+3. 【UIBezierPath】用贝塞尔曲线绘制闭合带圆角的矩形，在上下文中设置只有内部可见，再将不带圆角的 layer 渲染成图片，添加到贝塞尔矩形中。这种方法效率更高，但是 layer 的布局一旦改变，贝塞尔曲线都需要手动地重新绘制，所以需要对 frame、color 等进行手动地监听并重绘。
+4. 【CoreGraphics】重写 `drawRect:`，用 CoreGraphics 相关方法，在需要应用圆角时进行手动绘制。不过 CoreGraphics 效率也很有限，如果需要多次调用也会有效率问题。
+
 
 
 #### 触发离屏渲染原因的总结
@@ -453,134 +492,28 @@ view.layer.masksToBounds = true // 触发离屏渲染的原因
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# todo
-
-1. shadow 对于离屏渲染的关系
-2. 通过透明图片解决圆角离屏渲染问题，以及引入的 blending 问题
-3. 常见问题以及检测工具
-4. 常见卡顿原因即解决办法
-5. 概述一下离屏渲染的触发原因：超过一次遍历
-6. TODO 0 - Layer.content 的设置方式有哪些？drawRect 每次都会被调用吗？
-7. **TODO 1 - 为什么 DrawCalls 需要在下一个 runloop 里面执行？？？？**
-8. **TODO 2 - 如何高效地写布局，减少视图层级有什么好处？（可以简化布局计算，Note: Emmmmm… 据观察 iOS 的 Layout Constraint 在书写时应该尽量少的依赖于视图树中同层级的兄弟视图节点，它会拖慢整个视图树的 Layout 计算过程。）什么是 IO 限制？**
-9. **TODO 4 - 所以，图片大小和格式都是被 GPU 支持的，不然转换是发生在 CPU 上的，最好是 index bitmap ，可以免去转换。怎么理解？解码是什么？转换？**
-10. **TODO 5 - 这几个 buffer 是什么？会需要异步或者等到下一个 runloop 吗？**
-11. 利用没用完的文档：https://academy.realm.io/posts/tryswift-tim-oliver-advanced-graphics-with-core-animation/，https://zhuanlan.zhihu.com/p/72653360 即刻知乎，[https://github.com/100mango/zen/blob/master/WWDC%E5%BF%83%E5%BE%97%EF%BC%9AAdvanced%20Graphics%20and%20Animations%20for%20iOS%20Apps/Advanced%20Graphics%20and%20Animations%20for%20iOS%20Apps.md](https://github.com/100mango/zen/blob/master/WWDC心得：Advanced Graphics and Animations for iOS Apps/Advanced Graphics and Animations for iOS Apps.md) mongo github，WWDC 219_image_and_graphics_best_practices.pdf 文档
-12. 迁移面试问题到这个文档中
-13. CPU 降频的问题
-14. Offscreen buffer 和 framebuffer 在哪儿，切换成本在哪儿
-15. 圆角扩展类，如果避免？去整理一下直播间的
-
-
-
-# 常见问题及检测工具
-
-- What is the frame rate? Goal is always 60 fps. // 检查工具： Core Animation template / OpenGL ES driver template
-- CPU or GPU bound? Lower utilization is desired and saves battery. (更少的 CPU 或者 GPU 利用率，让电池更持久。) // 检查工具： OpenGL ES driver template
-- Any unnecessary CPU rendering? GPU is desirable but know when CPU makes sense. (得知道渲染什么和怎么渲染， drawRect 方法尽量少用，让 GPU 做更多的渲染。) // 检查工具： Core Animation template / OpenGL ES driver template
-- Too many offscreen passes? Fewer is better. (前面说 UIBlurEffect 的时候有说到，橘色的间隙就是用在 GPU 切换时间，每个间隙大概 0.1~0.2ms 。 离屏渲染也会出现这样的情况，因为它必须进行切换，所以得减少。因为前面有提到，我们减少 CPU 或者 GPU 的使用时间。) // 检查工具： Core Animation template
-- Too much blending? less is better. (GPU 昂贵) // 检查工具： Core Animation template
-- Any strange image formats or sizes? Avoida on-the-fly conversions or resizing. (会转给 CPU 去处理，增加 CPU 的负担) // 检查工具： Core Animation template
-- Any expensive views or effects? Understand the cost of what is in use. (避免昂贵的效果，例如 Blur 和 Vibrancy ，得去评判。) // 检查工具： Xcode view debugging
-- Anything unexpected in the view hierarchy? Know the actual view hierarchy. (添加和移除要匹配。) // 检查工具： Xcode view debugging
-
-
-
-问题 & 建议 & 检测工具
-
-目标帧率 & 60 FPS & Core Animation instrument
-
-CPU or GPU &降低使用率节约能耗 & Time Profiler instrument
-
-不必要的 CPU 渲染GPU 渲染更理想，但要清楚 CPU 渲染在何时有意义Time Profiler instrument
-
-过多的 offscreen passes越少越好Core Animation instrument
-
-过多的 blending越少越好Core Animation instrument
-
-奇怪的图片格式或大小避免实时转换或调整大小Core Animation instrument
-
-开销昂贵的视图或特效理解当前方案的开销成本Xcode View Debugger
-
-想象不到的层次结构了解实际的视图层次结构Xcode View Debugger
-
-![image-20200319163703553](/Users/rickey/Library/Application Support/typora-user-images/image-20200319163703553.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 自测题目
+
+一般来说做点题才能加深理解和巩固，所以这里从文章里简单提炼了一些，大家随便看看就好了：
+
+1. CPU 和 GPU 的设计目的分别是什么？
+2. CPU 和 GPU 哪个的 Cache\ALU\Control unit 的比例更高？
+3. 计算机图像渲染流水线的大致流程是什么？
+4. Framebuffer 帧缓冲器的作用是什么？
+5. Screen Tearing 屏幕撕裂是怎么造成的？
+6. 如何解决屏幕撕裂的问题？
+7. 掉帧是怎么产生的？
+8. CoreAnimation 的职责是什么？
+9. UIView 和 CALayer 是什么关系？有什么区别？
+10. 为什么会同时有 UIView 和 CALayer，能否合成一个？
+11. 渲染流水线中，CPU 会负责哪些任务？
+12. 离屏渲染为什么会有效率问题？
+13. 什么时候应该使用离屏渲染？
+14. shouldRasterize 光栅化是什么？
+15. 有哪些常见的触发离屏渲染的情况？
+16. cornerRadius 设置圆角会触发离屏渲染吗？
+17. 圆角触发的离屏渲染有哪些解决方案？
+18. 重写 drawRect 方法会触发离屏渲染吗？
 
 
 
@@ -588,9 +521,7 @@ CPU or GPU &降低使用率节约能耗 & Time Profiler instrument
 
 ---
 
-
-
-引用文献：
+参考文献：
 
 - [Inside look at modern web browser - Google](https://developers.google.com/web/updates/2018/09/inside-browser-part1)
 - [1.2CPU和GPU的设计区别 - Magnum Programm Life](https://www.cnblogs.com/biglucky/p/4223565.html)
