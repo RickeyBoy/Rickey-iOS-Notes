@@ -1,14 +1,14 @@
 # iOS 渲染全解析
 
+> 希望通过这篇文章从头到尾梳理一下 iOS 中涉及到渲染原理相关的内容，会先从计算机渲染原理讲起，慢慢说道 iOS 的渲染原理和框架，最后再深入探讨一下离屏渲染。
+>
+> 希望能对大家有点帮助~
+
+![catalog](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/catalog.png)
 
 
-#### 目录
 
-
-
-
-
-## 计算机渲染原理
+## 1. 计算机渲染原理
 
 #### CPU 与 GPU 的架构
 
@@ -74,7 +74,7 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 
 
-## 屏幕成像与卡顿
+## 2. 屏幕成像与卡顿
 
 在图像渲染流程结束之后，接下来就需要将得到的像素信息显示在物理屏幕上了。GPU 最后一步渲染结束之后像素信息，被存在帧缓冲器（Framebuffer）中，之后视频控制器（Video Controller）会读取帧缓冲器中的信息，经过数模转换传递给显示器（Monitor），进行显示。完整的流程如下图所示：
 
@@ -142,7 +142,7 @@ CPU+GPU 的渲染流程是一个非常耗时的过程。如果在电子束开始
 
 
 
-## iOS 中的渲染框架
+## 3. iOS 中的渲染框架
 
 ![softwareStack](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSRender/softwareStack.png)
 
@@ -262,7 +262,7 @@ UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联�
 
 
 
-## Core Animation 渲染全内容
+## 4. Core Animation 渲染全内容
 
 #### Core Animation Pipeline 渲染流水线
 
@@ -340,7 +340,7 @@ Render Server 通常是 OpenGL 或者是 Metal。以 OpenGL 为例，那么上�
 
 
 
-## Offscreen Rendering 离屏渲染
+## 5. Offscreen Rendering 离屏渲染
 
 离屏渲染作为一个面试高频问题，时常被提及，下面来从头到尾讲一下离屏渲染。
 
@@ -492,9 +492,9 @@ view.layer.masksToBounds = true // 触发离屏渲染的原因
 
 
 
-## 自测题目
+## 6. 自测题目
 
-一般来说做点题才能加深理解和巩固，所以这里从文章里简单提炼了一些，大家随便看看就好了：
+一般来说做点题才能加深理解和巩固，所以这里从文章里简单提炼了一些，希望能帮到大家：
 
 1. CPU 和 GPU 的设计目的分别是什么？
 2. CPU 和 GPU 哪个的 Cache\ALU\Control unit 的比例更高？
