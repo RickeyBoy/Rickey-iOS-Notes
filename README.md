@@ -1,8 +1,8 @@
-# Rickey-iOS-Notes
+# Rickey 的笔记
 
-iOS 学习过程中的一些收获
+笔记合集，记录我在 iOS 学习过程中的一些收获
 
-[掘金](https://juejin.im/user/59c0ede76fb9a00a3d134e0b), [小专栏](https://xiaozhuanlan.com/u/rickeyboy)
+其他地址：[掘金](https://juejin.im/user/59c0ede76fb9a00a3d134e0b), [小专栏](https://xiaozhuanlan.com/u/rickeyboy)
 
 -------
 

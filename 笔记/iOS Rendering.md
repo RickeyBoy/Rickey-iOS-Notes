@@ -23,7 +23,7 @@ CPU 和 GPU 其设计目标就是不同的，它们分别针对了两种不同�
 
 ![architecture](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSRender/architecture.png?raw=true)
 
-因此，CPU 与 GPU 的架构也不同。因为 CPU 面临的情况更加复杂，因此从上图中也可以看出，CPU 拥有更多的缓存空间 Cache 以及复杂的控制单元，计算能力并不是 CPU 的主要诉求。CPU 是设计目标是低时延，更多的高速缓存也意味着可以更快地访问数据；同时复杂的控制单元也能更快速地处理逻辑分支，更适合串行计算。
+因此，CPU 与 GPU 的架构也不同。因为 CPU 面临的情况更加复杂，因此从上图中也可以看出，CPU 拥有更多的缓存空间 Cache 以及复杂的控制单元，计算能力并不是 CPU 的主要诉求。CPU 的设计目标是低时延，更多的高速缓存也意味着可以更快地访问数据；同时复杂的控制单元也能更快速地处理逻辑分支，更适合串行计算。
 
 而 GPU 拥有更多的计算单元 Arithmetic Logic Unit，具有更强的计算能力，同时也具有更多的控制单元。GPU 基于大吞吐量而设计，每一部分缓存都连接着一个流处理器（stream processor），更加适合大规模的并行计算。
 
@@ -274,15 +274,15 @@ UIView 作为最常用的视图控件，和 CALayer 也有着千丝万缕的联�
 
 **Handle Events**：这个过程中会先处理点击事件，这个过程中有可能会需要改变页面的布局和界面层次。
 
-**Commit Transaction：**此时 app 会通过 CPU 处理显示内容的前置计算，比如布局计算、图片解码等任务，接下来会进行详细的讲解。之后将计算好的图层进行打包发给 `Render Server`。
+**Commit Transaction**：此时 app 会通过 CPU 处理显示内容的前置计算，比如布局计算、图片解码等任务，接下来会进行详细的讲解。之后将计算好的图层进行打包发给 `Render Server`。
 
-**Decode：**打包好的图层被传输到 `Render Server` 之后，首先会进行解码。注意完成解码之后需要等待下一个 RunLoop 才会执行下一步 `Draw Calls`。
+**Decode**：打包好的图层被传输到 `Render Server` 之后，首先会进行解码。注意完成解码之后需要等待下一个 RunLoop 才会执行下一步 `Draw Calls`。
 
-**Draw Calls：**解码完成后，Core Animation 会调用下层渲染框架（比如 OpenGL 或者 Metal）的方法进行绘制，进而调用到 GPU。
+**Draw Calls**：解码完成后，Core Animation 会调用下层渲染框架（比如 OpenGL 或者 Metal）的方法进行绘制，进而调用到 GPU。
 
-**Render：**这一阶段主要由 GPU 进行渲染。
+**Render**：这一阶段主要由 GPU 进行渲染。
 
-**Display：**显示阶段，需要等 `render` 结束的下一个 RunLoop 触发显示。
+**Display**：显示阶段，需要等 `render` 结束的下一个 RunLoop 触发显示。
 
 
 
