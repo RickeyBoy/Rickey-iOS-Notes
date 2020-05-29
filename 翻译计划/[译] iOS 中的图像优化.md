@@ -16,7 +16,7 @@
 
 小测试 —— 我可爱女儿这张 266KB（并且活力四射）的照片在一个 iOS 应用中需要占多少内存？
 
-![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/SwiftGG%E8%AF%95%E8%AF%91/baylor.jpg?raw=true)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/SwiftGGVision/baylor.jpg?raw=true)
 
 剧透一下 —— 答案不是 266KB，也不是 2.66MB，而是差不多 14MB。
 
@@ -79,7 +79,7 @@ imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
 
 上述代码能得到：
 
-![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/SwiftGG%E8%AF%95%E8%AF%91/baylorPhone.jpg?raw=true)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/SwiftGGVision/baylorPhone.jpg?raw=true)
 
 使用 LLDB 我们就能很快得到正在使用的图片的真实尺寸，即使我们使用了远小于原图尺寸的 UIImageView 去呈现它：
 
@@ -110,7 +110,7 @@ Image IO  13.4M   13.4M   13.4M    0K  0K  0K   0K  2
 
 啊 —— 有差不多 14 MB 的内存脏数据，这正符合我们之前快速估计出的图片开销的结果。再多说明一下，这有一个命令行的截图，可以清楚地说明 grep 语句结果中省略掉的每一列的含义。
 
-![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/SwiftGG%E8%AF%95%E8%AF%91/vmmap.jpg?raw=true)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/SwiftGGVision/vmmap.jpg?raw=true)
 
 
 显然，即使我们使用 300 x 400 大小的 UIImageView 来呈现图片，这部分开销也和原始尺寸的图片一样。不过图片尺寸虽然关键，但并不是全部因素。
