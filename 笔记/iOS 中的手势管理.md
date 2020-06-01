@@ -3,6 +3,12 @@
 
 # 第一步：IO Kit
 
+### 计算机组成与 IO 总线
+
+要深入了解 IOKit，就要从计算机组成与 IO 总线说起。
+
+https://www.cnblogs.com/wwj99/p/12852344.html
+
 ### iOS 的系统架构
 
 ### 什么是 IOKit
