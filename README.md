@@ -27,10 +27,10 @@
 
 ### 翻译计划
 
-- [避免 Swift 单元测试中的强制解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%BF%BB%E8%AF%91%E8%AE%A1%E5%88%92/%5B%E8%AF%91%5D%20Swift%20%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F.md)
-- [Swift 中的内存泄漏](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/%5B译%5D%20Swift%20中的内存泄漏.md)
-- [重写 loadView() 方法使 Swift 视图代码更加简洁](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/%5B译%5D%20重写%20loadView()%20方法使%20Swift%20视图代码更加简洁.md)
-- [iOS 中的图像优化](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/%5B译%5D%20iOS%20中的图像优化.md)
+- [避免 Swift 单元测试中的强制解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20避免%20Swift%20单元测试中的强制解析.md)
+- [Swift 中的内存泄漏](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20Swift%20中的内存泄漏.md)
+- [重写 loadView() 方法使 Swift 视图代码更加简洁](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20重写%20loadView()%20方法使%20Swift%20视图代码更加简洁.md)
+- [iOS 中的图像优化](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20iOS%20中的图像优化.md)
 
 ### 校招面经
 
