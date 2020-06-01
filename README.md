@@ -33,9 +33,15 @@
 - [iOS 中的图像优化](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/翻译计划/%5B译%5D%20iOS%20中的图像优化.md)
 
 ### 校招面经
-[携程](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E9%9D%A2%E8%AF%95%E7%BB%8F%E5%8E%86/%E6%90%BA%E7%A8%8B%E9%9D%A2%E8%AF%95%E9%A2%98.md), [阿里](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E9%9D%A2%E8%AF%95%E7%BB%8F%E5%8E%86/%E9%98%BF%E9%87%8C%E5%B7%B4%E5%B7%B4%E9%9D%A2%E8%AF%95%E9%A2%98.md), [京东](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E9%9D%A2%E8%AF%95%E7%BB%8F%E5%8E%86/%E4%BA%AC%E4%B8%9C%E9%9D%A2%E8%AF%95%E9%A2%98.md), [腾讯](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/面试经历/腾讯面试题.md), [小红书](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/面试经历/小红书面试题.md)
+
+- [携程](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Interviews/携程面试题.md)
+- [阿里](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Interviews/阿里巴巴面试题.md)
+- [京东](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Interviews/京东面试题.md)
+- [腾讯](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Interviews/腾讯面试题.md)
+- [小红书](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Interviews/小红书面试题.md)
 
 ### 有趣的问题
+
 - [小白鼠试毒](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Games/小白鼠试毒%20PDF%20版.pdf)
 - [白帽子问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Games/白帽子问题.md)
 - [海盗博弈问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Games/海盗博弈问题.md)
