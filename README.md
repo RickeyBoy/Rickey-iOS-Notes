@@ -1,8 +1,17 @@
 # Rickey 的笔记
 
-笔记合集，记录我在 iOS 学习过程中的一些收获
+<p>
+<a href="https://juejin.im/user/59c0ede76fb9a00a3d134e0b/posts"><img src="https://img.shields.io/badge/%E6%8E%98%E9%87%91-RickeyBoy-RGB(0%2C%20109%2C%20250)"></a>
+<a href="https://xiaozhuanlan.com/u/rickeyboy"><img src="https://img.shields.io/badge/%E5%B0%8F%E4%B8%93%E6%A0%8F-RickeyBoy-RGB(255%2C112%2C91)"></a>
+</p>
 
-其他地址：[掘金](https://juejin.im/user/59c0ede76fb9a00a3d134e0b), [小专栏](https://xiaozhuanlan.com/u/rickeyboy)
+<p>
+<img src="https://img.shields.io/badge/platform-iOS-ff69b4.svg">
+<img src="https://img.shields.io/badge/language-Swift-orange.svg">
+<img src="https://img.shields.io/badge/language-Objective--C-blue.svg">
+</p>
+
+我的笔记合集，记录我在 iOS 学习过程中的一些收获
 
 -------
 
