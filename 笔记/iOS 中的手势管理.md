@@ -56,9 +56,11 @@
 
 也因此可想而知，其实 I/O Kit 所处的位置应该位于系统较为底层的地方。对于 iOS 系统（以及 OS X）来说，如图所示，大概可以分为下面四层。其中操作系统核心 Darwin 包含内核和 UNIX shell 环境，I/O Kit 也位于其中。
 
-![4layers](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/4layers.png)
+![](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/4layers.png)
 
-### I/O Kit Family
+### IOHIDFamily
+
+首先需要说明的是，I/O Kit 既适用于 OS X 也适用于 iOS，但是由于苹果对 iOS 使用 I/O Kit 的限制，因此在公开文档中大部分都是针对 OS X 所写，和 iOS 有一定的区别。
 
 I/O Kit 中所有类的祖先都是 OSObject 类，而苹果定义了一些设备的 Family（"族"），都继承于 OSObject，分别实现了一些通用的驱动程序。这样说起来还是有点抽象，说一些常见的族就大概能理解了：
 
@@ -69,20 +71,102 @@ I/O Kit 中所有类的祖先都是 OSObject 类，而苹果定义了一些设�
 - IONetworkingFamily：提供对无线网络连接的支持
 - IOGraphicsFamily：通用图形适配器，支持屏幕显示
 
-而我们需要关注的是 IOHIDFamily，他的全称是 Human Interface Device。根据官方文档的说明：
+而我们需要关注的是 IOHIDFamily，他的全称是 Human Interface Device。根据官方文档的说明，它负责连接与用户交互的驱动设备，比如键盘鼠标等：
 
->  The Graphics family provides support for frame buffers and display devices (monitors).
+> The Human Interface Device (HID) class is one of several device classes described by the USB (Universal Serial Bus) architecture. The HID class consists primarily of devices humans use to control a computer system’s operations.
+>
+> Examples of such HID class devices include: Keyboards and pointing devices such as mice, trackballs, and joysticks.....
+
+根据针对 OS X 的这些描述，我们也能很容易地推断出，IOHIDFamily 在 iOS 系统上也负责了触屏事件的处理。实际上，IOHIDFamily 会创建一个 IOHIDEventSystem 对象，其中包括多个 IOHIDEventService，是用来向外分发事件的实现类：
+
+> 参考：[IOHIDEventService - Apple](https://developer.apple.com/documentation/hiddriverkit/iohideventservice?language=occ)
+>
+> IOHIDEventService: The base class for implementing a device or operating system service that dispatches events to the system.
+
+而在此基础之上，IOHIDFamily 定义了多种事件（本质是一个 IOHIDEvent 对象），全部都通过 IOHIDEventService 向外分发，包括键盘（[dispatchKeyboardEvent](https://developer.apple.com/documentation/hiddriverkit/iohideventservice/3338745-dispatchkeyboardevent?language=objc)）、鼠标准确点击（[dispatchAbsolutePointerEvent](https://developer.apple.com/documentation/hiddriverkit/iohideventservice/3338744-dispatchabsolutepointerevent?language=objc)）、鼠标滚轮（[dispatchRelativeScrollWheelEvent](https://developer.apple.com/documentation/hiddriverkit/iohideventservice/3338747-dispatchrelativescrollwheelevent?language=objc)）等，而其中我们就能找到我们所关心的触屏点击事件：[dispatchDigitizerTouchEvent](https://developer.apple.com/documentation/hiddriverkit/iohideventservice/3395539-dispatchdigitizertouchevent?language=objc)。
+
+进一步的，我们可以看到 dispatchDigitizerTouchEvent 的声明：
+
+```cpp
+virtual kern_return_t 
+dispatchDigitizerTouchEvent(uint64_t timeStamp, IOHIDDigitizerTouchData *touchData, uint32_t touchDataCount);
+```
+
+其中，touchData 是一个包含多个触摸信息（[IOHIDDigitizerTouchData](https://developer.apple.com/documentation/hiddriverkit/iohiddigitizertouchdata?language=objc)）的数组，每个触摸信息都对应屏幕上一个手指的触摸，包含具体的触摸点坐标、坐标变化等信息。看到这里，已经有一种豁然开朗的感觉了，这不就是 UIGesture 和 UITouch 的关系在底层的对应吗？
+
+所以总结一下，整个内核处理触屏的整个过程大概如图所示：
+
+![IOKit](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/IOKit.png)
+
+
+
+# 第二步：SpringBoard
+
+### Mach 与 SpringBoard
+
+Mach 是 OS X 以及 iOS 中最核心的部分，仅处理最重要的任务，包括：进程和线程抽象、任务调度、进程间通讯和消息传递、虚拟内存管理。在 Mach 中，消息会在两个端口 Port 之间传递，对象之间通过各自注册、负责端口，再通过端口传递消息来完成相互之间的通信。
+
+SpringBoard 是 iOS 系统内一个特殊的守护程序（Daemon），主要负责 iOS 设备的 UI 支持。当系统启动后，它会启动一个图形 Shell 环境，支持丰富的 GUI，这在 OS X 上是 Finder，而在 iOS 上就是 SpringBoard。
+
+SpringBoard 主要职责是负责展示 UI，比如每次创建 GUI 时 SpringBoard 都会遍历 var/mobile/Applications 中的所有应用，然后创建对应的图标展示在主屏幕上。与此同时，SpringBoard 也会负责 iOS 中每个类型的操作，负责将 UI 事件分发到应用程序。而如果 SpringBoard 被暂停，任何 UI 操作都不会被分发到应用程序；如果 SpringBoard 超过几分钟不响应，系统将会被 watch dog 重启。
+
+### GSEvent
+
+前文说到内核通信都通过 Mach 消息在 port 之间传递，SpringBoard 会要求注册不少的 port，其中最重要的是 PurpleSystemEventPort 这个端口，这个端口会接收硬件事件，然后通过封装、传递 GSEvent 消息来传递 UI 事件。SpringBoard 主线程会维护一个 CFRunloop 循环运行来响应、分发这些 UI 事件，而触屏事件就会在这儿被处理，其他的事件还包括像开机、锁屏、音量键、设备 orientation 改变等事件，具体事件列表可以参考 [GSEvent](https://iphonedevwiki.net/index.php/GSEvent)。
+
+GSEvent 实际上是 GraphicsServices.framework 中关于 UI 事件的初步封装，也是 UIEvent 的基础。一个 GSEvent 会包含下面这些信息：事件的类别、事件的触发位置和时间、触发事件的进程，以及应该接受 GSEvent 的进程。
+
+总体而言，上一小节最后提到的 IOHIDEvent 会被传递到 SpringBoard 中，在此之后就会由 SpringBoard 封装成 GSEvent 来分发给应用程序。具体过程可以参照下图：
+
+![SpringBoard](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/SpringBoard.png)
+
+> 注：
+>
+> 网上之前有大量文章说 IOHIDEvent 经过 SpringBoard 中转后，仍是以 IOHIDEvent 被传递给当前的应用程序，但我对这一点表示怀疑，因为 SpringBoard 分发的 UI 事件应该是以 GSEvent 的形式（除了极少数如陀螺仪、磁力计事件）。
+>
+> 与此同时，GSEvent 也比 IOHIDEvent 包含更多的信息（参考 [IOHIDEvent.h](https://opensource.apple.com/source/IOHIDFamily/IOHIDFamily-308/IOHIDFamily/IOHIDEvent.h.auto.html) 和 [GSEvent.h](https://github.com/kennytm/iphone-private-frameworks/blob/master/GraphicsServices/GSEvent.h)），也包含直接计算 CGPoint 等的方法，所以推测它应该是更高一级的封装。
+>
+> 但实际上关于 IOHIDEvent 到 GSEvent 的封装，这里我查了很多资料，但是没有找到特别明确说明这个流程的文章，上述观点只是根据大量查阅到的资料归纳而成。大家如果有了解的，可以互相交流~
+
+
+
+# 第三步：Runloop
+
+### Runloop
+
+
+
+### 主线程 Runloop：Main Event Loop
+
+![main_event_loop](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/main_event_loop.jpg)
+
+在 app 中，每一个线程都会依附一个 runloop，而主线程的 runloop 就是所谓的 main event loop，而它的最主要特点之一在于它会接收并处理底层操作系统产生的触摸事件。底层触摸事件会被操作系统分发进入一个事件处理队列 Event queue，按照先进先出 FIFO 的规则被主线程 runloop 处理。
+
+> Event Loop 是一种常见的设计模式，runloop 本质上也是 event loop。
+
+一个 app 启动后，会开启主线程 runloop，之后触摸事件就会被 runloop 上的 input source 接收，之后 app 会将这个触摸事件转换成对应的对象，对于 iOS 是 UIEvent，而对于 OS X 是 NSEvent。
+
+In the main event loop, an application continuously routes incoming events to objects for handling and, as a result of that handling, updates its appearance and state. An event loop is simply a run loop: an event-processing loop for scheduling work and coordinating the receipt of events from various input sources attached to the run loop. Every thread has access to a run loop. In all but the main thread, the run loop must be configured and run manually by your code. In Cocoa applications, the run loop for the main thread—the main event loop—is run automatically by the application object. What distinguishes the main event loop is that its primary input source receives events from the operating system that are generated by user actions—for example, tapping a view or entering text using a keyboard.
 
 
 
 
+
+
+### 重要参考
+iOS触摸事件全家桶 https://juejin.im/entry/59a7b6e4f265da246f381d37#comment
+iOS Touch Event from the inside out https://www.jianshu.com/p/70ba981317b6
+iOS 中的事件响应与处理 https://blog.boolchow.com/2018/03/25/iOS-Event-Response/
+深入理解RunLoop https://blog.ibireme.com/2015/05/18/runloop/
+main event loop - Apple https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/MainEventLoop.html
+Stackoverflow 关于 Gesture 传递过程!!!：https://stackoverflow.com/questions/22116698/does-uiapplication-sendevent-execute-in-a-nsrunloop
 
 
 
 ---
 682 iOS family
 
-[深入浅出iOS系统内核（1）— 系统架构](https://www.jianshu.com/p/029cc1b039d6)
+
 
 [IOKit-fundamentals](https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Introduction/Introduction.html)
 
@@ -158,5 +242,11 @@ Port 机制在 IPC 中的应用是 Mach 与其他传统内核的区别之一，�
 
 - [计算机组成原理——原理篇 IO（上）- 小萝卜鸭](https://www.cnblogs.com/wwj99/p/12852344.html)
 - [Projected-Capacitive Touch Technology](http://large.stanford.edu/courses/2012/ph250/lee2/docs/art6.pdf)
-- [IOKit-fundamentals](https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Introduction/Introduction.html)
+- [Apple - IOKit-fundamentals](https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Introduction/Introduction.html)
+- [Apple - IOKit Fundamentals - I/O Kit Family Reference](https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Families_Ref/Families_Ref.html#//apple_ref/doc/uid/TP0000021-BABCCBIJ)
+- [PhoneWiki - IOHIDFamily](http://iphonedevwiki.net/index.php/IOHIDFamily)
+- [深入浅出iOS系统内核（1）— 系统架构 — darcy87)](https://www.jianshu.com/p/029cc1b039d6)
+- [PhoneWiki - GSEvent](https://iphonedevwiki.net/index.php/GSEvent)
+- [Chapter 4. Event Handling and Graphics Services](https://www.oreilly.com/library/view/iphone-open-application/9780596155346/ch04.html)
+- [Apple - main event loop](https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/MainEventLoop.html)
 
