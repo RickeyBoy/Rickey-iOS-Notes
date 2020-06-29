@@ -164,13 +164,11 @@ Stackoverflow 关于 Gesture 传递过程!!!：https://stackoverflow.com/questio
 
 
 ---
-682 iOS family
 
 
+[手势管理方案！！ - Rickey](https://bytedance.feishu.cn/docs/doccnb6xup0noupEMWKhu0EMM1g)
 
-[IOKit-fundamentals](https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Introduction/Introduction.html)
 
-IOHIDEvent:https://github.com/kennytm/iphone-private-frameworks/blob/master/IOKit/hid/IOHIDEvent.h
 
 ### SpringBoard.app
 
