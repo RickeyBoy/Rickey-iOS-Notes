@@ -8,7 +8,7 @@ iOS 是基于 BSD 发展而来，所以先理解一般的桌面操作系统的�
 
 
 
-## 操作系统的内存机制
+## 1. 操作系统的内存机制
 
 为了从根本上更好地理解和分析 iOS 系统上的内存特性，我们首先需要正确理解一般操作系统通用的内存机制。
 
@@ -90,7 +90,7 @@ iOS 是基于 BSD 发展而来，所以先理解一般的桌面操作系统的�
 
 
 
-## iOS 的内存机制
+## 2. iOS 的内存机制
 
 根据官方文档 [Memory Usage Performance Guidelines](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/ManagingMemory/Articles/AboutMemory.html#//apple_ref/doc/uid/20001880-BCICIHAB)（现在已经不更新了）我们能知道 iOS 的内存机制有下面几个特点：
 
@@ -134,7 +134,7 @@ iOS 和大多数桌面操作系统一样，使用了虚拟内存机制。
 
 
 
-## iOS 系统内存占用
+## 3. iOS 系统内存占用
 
 分析了 iOS 内存机制的特点之后，我们能够意识到合理控制 app 使用的内存是非常重要的一件事。那么具体来说，我们需要减少的是哪些部分呢？实际上这就是所谓的 iOS 内存占用（Memory Footprint）的部分。
 
@@ -198,7 +198,7 @@ array[19999] = 64
 
 
 
-## iOS app 内存管理
+## 4. iOS app 内存管理
 
 前文讲了 iOS 系统层面上的内存机制，在系统层面上的内存管理大多数情况下都已经由操作系统自动完成了。iOS 中一个 app 就是一个进程，所以开发者平时经常讨论的内存管理，比如 MRC、ARC 等等，实际上属于进程内部的内存管理，或者说是语言层面上的内存管理。这部分内存管理语言本身、操作系统均会有一些管理策略，但是作为开发者来说，很多时候还是需要从语言层面直接进行操作的。
 
@@ -396,7 +396,7 @@ class viewController {
 
 
 
-## OOM 崩溃
+## 5. OOM 崩溃
 
 ### Jetsam 机制
 
@@ -468,7 +468,7 @@ OOM 分为两大类，Foreground OOM / Background OOM，简写为 FOOM 以及 BO
 
 
 
-## 内存分析
+## 6. 内存分析
 
 关于内存占用情况、内存泄漏，我们都有一系列方法进行分析检测。
 
@@ -481,6 +481,30 @@ OOM 分为两大类，Foreground OOM / Background OOM，简写为 FOOM 以及 BO
 - Memory Resource Exceptions：从 Xcode 10 开始，内存占用过大时，调试器能捕获到 `EXC_RESOURCE RESOURCE_TYPE_MEMORY` 异常，并断点在触发异常抛出的地方。
 - Xcode Memory Debugger：Xcode 中可以直接查看所有对象间的相互依赖关系，可以非常方便的查找循环引用的问题。同时，还可以将这些信息导出为 memgraph 文件。
 - memgraph + 命令行指令：结合上一步输出的 memgraph 文件，可以通过一些指令来分析内存情况。`vmmap` 可以打印出进程信息，以及 VMRegions 的信息等，结合 `grep` 可以查看指定 VMRegion 的信息。`leaks` 可追踪堆中的对象，从而查看内存泄漏、堆栈信息等。`heap` 会打印出堆中所有信息，方便追踪内存占用较大的对象。`malloc_history` 可以查看 `heap` 指令得到的对象的堆栈信息，从而方便地发现问题。总结：`malloc_history` ===> Creation；`leaks`  ===> Reference；`heap` & `vmmap` ===> Size。
+
+
+
+# 7. 自测题目
+
+一般来说做点题才能加深理解和巩固，所以这里从文章里简单提炼了一些，希望能帮到大家：
+
+1. 什么是冯·诺依曼结构？
+2. 什么是冯·诺依曼结构的瓶颈，以及如何突破瓶颈？
+3. 存储器分哪两类，分别有什么特点？
+4. 为什么使用缓存能提高效率？
+5. 什么是物理寻址？什么是虚拟寻址？
+6. 虚拟地址翻译过程由谁负责？具体流程是怎样的？
+7. 虚拟内存有哪些意义？
+8. 什么是内存交换机制？
+9. 内存分页有什么意义？
+10. iOS 的内存机制有什么特点？
+11. clean memory、dirty memory、compressed memory 分别是什么？
+12. 引起循环引用的本质原因是什么？
+13. weak 和 unowned 的区别是什么？
+14. 列举一些不会导致循环引用的闭包场景。
+15. 什么是 OOM 崩溃？
+16. 检测 OOM 崩溃有哪些常见方法？
+17. OOM 崩溃有哪些常见原因？
 
 
 
