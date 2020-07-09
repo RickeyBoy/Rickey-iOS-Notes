@@ -25,7 +25,7 @@
 - [iOS HTTP & HTTPS 详解](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/iOS%20HTTP%20%26%20HTTPS%20%E8%AF%A6%E8%A7%A3.md)
 
 ### 功能探索
-
+- [WWDC 2020 - 评估优化 App 的语音交互](https://xiaozhuanlan.com/topic/4759630281)
 - [WWDC 2019 - 理解 Vision 框架中的图片技术](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/%E7%90%86%E8%A7%A3%20Vision%20%E6%A1%86%E6%9E%B6%E4%B8%AD%E7%9A%84%E5%9B%BE%E7%89%87%E6%8A%80%E6%9C%AF.md)
 - [优化 Xcode 编译时间](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/%E4%BC%98%E5%8C%96%20Xcode%20%E7%BC%96%E8%AF%91%E6%95%88%E7%8E%87.md)
 - [iOS Widget 开发详解（Today Extension）](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Widget%20开发详解（Today%20Extension）.md)
