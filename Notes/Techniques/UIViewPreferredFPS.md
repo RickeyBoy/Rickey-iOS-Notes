@@ -2,7 +2,7 @@
 
 ![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/Catalog.png?raw=true)
 
-## 为什么要降帧
+## 一、为什么要降帧
 
 ![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/header.png?raw=true)
 
@@ -14,7 +14,7 @@
 
 
 
-## 动画渲染对性能的消耗
+## 二、动画渲染对性能的消耗
 
 iOS 中的屏幕渲染原理可以参看之前的文章：[iOS 渲染全解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Rendering.md)，文中会讲解整个屏幕渲染的过程，详细说明了 Core Animation 渲染流水线的整个原理，为什么渲染过程会对 GPU 有较大的消耗。
 
@@ -33,7 +33,7 @@ iOS 中的屏幕渲染原理可以参看之前的文章：[iOS 渲染全解析](
 
 
 
-## 屏幕刷新 FPS vs CoreAnimation FPS 
+## 三、屏幕刷新 FPS vs CoreAnimation FPS 
 
 vSync 垂直信号刷新屏幕的原理我们都知道，但是在 iOS 中并不止有一种 FPS。
 
@@ -61,7 +61,7 @@ CoreAnimation FPS 指的是 CoreAnimation Render Server 的运行帧率，对应
 
 
 
-## 降帧方案
+## 四、降帧方案
 
 在调查降帧方案之前，先回顾一下我们的最终目的：调研多种动画实现方法，选择可以控制或者降低渲染帧率的方式，重新实现已有动画。进而达到降低 GPU 使用率的效果。
 
@@ -105,7 +105,7 @@ CADisplayLink 是一个能让我们以和屏幕刷新率相同的频率将内容
 
 
 
-## 测试方案与结论
+## 五、测试方案与结论
 
 ### 最终方案
 
