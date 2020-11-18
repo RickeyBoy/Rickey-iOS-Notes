@@ -1,12 +1,12 @@
-# UIView 动画降帧
+# UIView 动画降帧探究
 
-![Catalog](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/Catalog.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/Catalog.png?raw=true)
 
 ## 为什么要降帧
 
-![header](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/header.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/header.png?raw=true)
 
-首先要说明一件事，那就是为什么要对动画降帧。
+首先要说明一件事，那就是为什么要对动画降帧？
 
 众所周知，刷新频率越高体验越好，对于 iOS app 的刷新频率应该是越接近越 60fps 越好，这里主动给动画降帧，肯定会影响动画的体验。但是另一方面，我们也知道动画渲染的过程中需要消耗大量的 GPU 资源，所以给动画降帧则可以给 GPU 减负，降低 GPU 使用率峰值。
 
@@ -18,7 +18,7 @@
 
 iOS 中的屏幕渲染原理可以参看之前的文章：[iOS 渲染全解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Rendering.md)，文中会讲解整个屏幕渲染的过程，详细说明了 Core Animation 渲染流水线的整个原理，为什么渲染过程会对 GPU 有较大的消耗。
 
-![CApipeline](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/CApipeline.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/CApipeline.png?raw=true)
 
 下图是 Core Animation 的单次渲染流水线，也就是一帧动画的渲染过程：
 - **Handle Events**：这个过程中会先处理点击事件，这个过程中有可能会需要改变页面的布局和界面层次。
@@ -47,7 +47,7 @@ vSync 垂直信号刷新屏幕的原理我们都知道，但是在 iOS 中并不
 
 CoreAnimation FPS 指的是 CoreAnimation Render Server 的运行帧率，对应前面渲染流水线中非常重要的 GPU render 阶段。
 
-![CApipeline2](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/CApipeline2.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/CApipeline2.png?raw=true)
 
 可以发现，每一次渲染流水线都一定会有 Render Server 参与的过程，所以 Render Server 运行的频率直接反应了 GPU 被调用的频率。CoreAnimation FPS 越高，意味着 GPU 被渲染流水线使用的越频繁，那么相应的 GPU 使用率就会越高。
 
@@ -55,7 +55,7 @@ CoreAnimation FPS 指的是 CoreAnimation Render Server 的运行帧率，对应
 
 正常情况下，如果界面没有频繁的 UI 变更，不需要频繁的重新渲染，那么 CoreAnimation FPS 应该是非常低的。但是如果使用了高帧率动画，由于需要快速更新动画效果，必然会引起 CoreAnimation FPS 升高。
 
-![Instrument](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/Instrument.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/Instrument.png?raw=true)
 
 我们使用 Instrument 中 CoreAnimation FPS 选项测出的 FPS 就是 CoreAnimation FPS，如图可以看到，能够通过 Instrument 监测到 avg CoreAnimation FPS，以及 GPU 使用率的情况，可以将这些指标作为帧率优化的结果指标。
 
@@ -79,7 +79,7 @@ CoreAnimation FPS 指的是 CoreAnimation Render Server 的运行帧率，对应
 
 ### Core Animation 动画
 
-![CAProcess](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/CAProcess.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/CAProcess.png?raw=true)
 
 由于 CALayer 保存的是一个静态的 bitmap 以及一些状态信息（如透明度、旋转角度等），对于一个动画过程，实际上改变的是 layer 的状态，而不是静态内容。这也就意味着当动画发生时，Core Animation 会将静态 bitmap 以及改变后的状态传递给 GPU，GPU 根据 bitmap 及新的状态，将新的样式绘制在屏幕上。
 
@@ -115,7 +115,7 @@ CADisplayLink 是一个能让我们以和屏幕刷新率相同的频率将内容
 
 下面我们以进入抖音直播、在直播间内触发点赞动画为例子，进行对比测试：
 
-![digg](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/digg.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/digg.png?raw=true)
 
 - 原本方案（60 FPS）：基于 Core Animation 的动画
 - 降帧方案（30 FPS）：修改为 UIView animation block + UIViewAnimationOptionPreferredFramesPerSecond30
@@ -124,11 +124,11 @@ CADisplayLink 是一个能让我们以和屏幕刷新率相同的频率将内容
 
 这张图是没做改动的情况，可以看到在直播间内疯狂触发动画时，会将 Core Animation FPS 打满，始终保持在 59 - 60 FPS。
 
-![fps0](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/fps0.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/fps0.png?raw=true)
 
 采用降帧方案后，可以看到帧率明显下降，整个 App 的 Core Animation FPS 能降低到 40 FPS 左右。
 
-![fps1](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSPreferredFPS/fps1.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/fps1.png?raw=true)
 
 ### 对 CPU & GPU 的影响
 
