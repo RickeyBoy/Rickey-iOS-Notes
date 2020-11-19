@@ -91,6 +91,8 @@ CoreAnimation FPS 指的是 CoreAnimation Render Server 的运行帧率，对应
 
 UIView animation block 是根据 Core Animation 动画的封装，使用起来更加简洁。同时，UIView 提供 [UIViewAnimationOptionPreferredFramesPerSecond30](https://developer.apple.com/documentation/uikit/uiviewanimationoptions/uiviewanimationoptionpreferredframespersecond30) 属性，可以支持指定动画刷新频率为 30fps。
 
+> 注：实际上 CoreAnimation 动画通过设置 CAAnimation 私有属性 preferredFramesPerSecond，也可以达到降帧的效果，具体可查看 [iOS-Runtime-Headers](https://github.com/nst/iOS-Runtime-Headers/blob/master/Frameworks/QuartzCore.framework/CAAnimation.h) 中的相关属性。
+
 通过这个属性，可以很方便地实现降帧的目的，但是这个方案也并不是完美的，由于只支持了直线位移，所以当涉及到贝塞尔曲线位移的时候，需要手动计算贝塞尔曲线上的点，进行近似的位移。
 
 ### 利用 CADisplayLink 进行逐帧动画
