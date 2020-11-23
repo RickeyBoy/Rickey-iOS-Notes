@@ -103,6 +103,10 @@ CADisplayLink 是一个能让我们以和屏幕刷新率相同的频率将内容
 
 实际上使用 CADisplayLink 是一种终极方案，最终可以通过设置 CADisplayLink 的计时帧率来控制动画的帧率，不再只有 30 帧和 60 帧两个选项，能更好的适应多种情况，更好地平衡 GPU 占用率与用户体验。
 
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/iOSPreferredFPS/multiAnim.png?raw=true)
+
+另一种基于 CADisplayLink 的情况的好处在于可以精准控制多个动画触发时间。如果有多个低帧动画同时进行，但是这些低帧动画的刷新时刻不一定是同时触发的，那么整体来看有可能就会造成降帧效果不佳的情况（极端情况比如上图，两个 30 帧动画同时进行却刚好错开，造成 60 帧的效果）。这时通过 CADisplayLink 就能够精准地控制多个动画的刷新时刻，保证降帧的效果。
+
 但是基于 CADisplayLink 实现动画需要重写大量代码，工作量很大，具体可以参考 [Facebook - pop](https://github.com/facebookarchive/pop)，该库虽然不支持自定义帧率，但是已经完整实现了基于 CADisplayLink 的自定义动画。
 
 
