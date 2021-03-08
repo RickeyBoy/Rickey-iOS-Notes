@@ -1,11 +1,12 @@
 # Rickey 的笔记
 
 <p>
-<a href="https://juejin.im/user/59c0ede76fb9a00a3d134e0b/posts"><img src="https://img.shields.io/badge/%E6%8E%98%E9%87%91-RickeyBoy-RGB(0%2C%20109%2C%20250)"></a>
-<a href="https://xiaozhuanlan.com/u/rickeyboy"><img src="https://img.shields.io/badge/%E5%B0%8F%E4%B8%93%E6%A0%8F-RickeyBoy-RGB(255%2C112%2C91)"></a>
+<a href="https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&__biz=MzA5MTM1NTc2Ng==&scene=1&album_id=1406482220017369090&count=3#wechat_redirect"><img src="https://img.shields.io/badge/公众号-小吉的博客-green"></a>
+<a href="https://juejin.im/user/59c0ede76fb9a00a3d134e0b/posts"><img src="https://img.shields.io/badge/掘金-RickeyBoy-green"></a>
+<a href="https://xiaozhuanlan.com/u/rickeyboy"><img src="https://img.shields.io/badge/小专栏-RickeyBoy-green"></a>
 </p>
 
-<p>
+<p> 
 <img src="https://img.shields.io/badge/platform-iOS-ff69b4.svg">
 <img src="https://img.shields.io/badge/language-Swift-orange.svg">
 <img src="https://img.shields.io/badge/language-Objective--C-blue.svg">
