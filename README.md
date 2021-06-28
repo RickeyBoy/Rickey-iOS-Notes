@@ -41,7 +41,7 @@
 
 ### 翻译计划
 
-- [理解和消除app中的卡死 - WWDC 2021]()
+- [理解和消除app中的卡死 - WWDC 2021](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/WWDC2021理解和消除app中的卡死.md)
 - [避免 Swift 单元测试中的强制解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20避免%20Swift%20单元测试中的强制解析.md)
 - [Swift 中的内存泄漏](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20Swift%20中的内存泄漏.md)
 - [重写 loadView() 方法使 Swift 视图代码更加简洁](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20重写%20loadView()%20方法使%20Swift%20视图代码更加简洁.md)
