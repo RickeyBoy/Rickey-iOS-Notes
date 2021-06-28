@@ -1,4 +1,4 @@
-# 理解和消除 app 中的卡死
+# 理解和消除 app 中的卡死 - WWDC 2021
 
 ### 目录
 
@@ -9,7 +9,7 @@
 
 ### 一、什么是卡死
 
-![rickey_3703](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/WWDC2021/rickey_3703.png)
+![](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/backups/WWDC2021/rickey_3703.png?raw=true)
 
 当用户触摸了屏幕，但几秒钟之后 app 才有响应，那么这种情况就被称作卡死，换句话说也就是未响应、响应迟缓等。任何 app 都不会想给用户卡顿的体验。
 
