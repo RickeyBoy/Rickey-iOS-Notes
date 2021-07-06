@@ -22,8 +22,6 @@ http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/
 
 
 
-
-
 ---
 
 
