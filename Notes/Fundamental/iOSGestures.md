@@ -316,8 +316,7 @@ Stackoverflow 关于 Gesture 传递过程!!!：https://stackoverflow.com/questio
 
 ---
 
-[手势管理方案！！ - Rickey](https://bytedance.feishu.cn/docs/***REMOVED***)
-
+[手势管理方案！！ - Rickey]
 
 
 https://alanli7991.github.io/2017/05/20/Gesture%E5%92%8CUIControl%E8%A7%A6%E5%8F%91%E9%A1%BA%E5%BA%8F/
@@ -331,10 +330,6 @@ or:
 
 
 UIView的hitTest和pointInside方法 https://www.jianshu.com/p/c87de31b3985
-
-
-
-runloop：https://bytedance.feishu.cn/docs/doccnyktI3IbWSvhLGWKvoqouke
 
 
 
@@ -386,4 +381,6 @@ Port 机制在 IPC 中的应用是 Mach 与其他传统内核的区别之一，�
 [各种点击事件的关系](https://juejin.im/post/5bd142fdf265da0a8b576417)
 
 [黄文臣-七种手势详解](https://blog.csdn.net/Hello_Hwc/article/details/44044225)
+
+
 
