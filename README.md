@@ -30,6 +30,7 @@
 - [UIView 动画降帧探究](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Techniques/UIViewPreferredFPS.md)
 
 ### 功能探索
+- [理解和消除app中的卡死 - WWDC 2021](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/WWDC2021理解和消除app中的卡死.md)
 - [WWDC 2020 - 评估优化 App 的语音交互](https://xiaozhuanlan.com/topic/4759630281)
 - [WWDC 2019 - 理解 Vision 框架中的图片技术](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/%E7%90%86%E8%A7%A3%20Vision%20%E6%A1%86%E6%9E%B6%E4%B8%AD%E7%9A%84%E5%9B%BE%E7%89%87%E6%8A%80%E6%9C%AF.md)
 - [优化 Xcode 编译时间](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/%E7%AC%94%E8%AE%B0/%E4%BC%98%E5%8C%96%20Xcode%20%E7%BC%96%E8%AF%91%E6%95%88%E7%8E%87.md)
@@ -41,7 +42,6 @@
 
 ### 翻译计划
 
-- [理解和消除app中的卡死 - WWDC 2021](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/WWDC2021理解和消除app中的卡死.md)
 - [避免 Swift 单元测试中的强制解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20避免%20Swift%20单元测试中的强制解析.md)
 - [Swift 中的内存泄漏](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20Swift%20中的内存泄漏.md)
 - [重写 loadView() 方法使 Swift 视图代码更加简洁](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Translation/%5B译%5D%20重写%20loadView()%20方法使%20Swift%20视图代码更加简洁.md)
