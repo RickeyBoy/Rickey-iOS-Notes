@@ -1,4 +1,4 @@
-# iOS 中的手势传递
+# iOS 中的手势传递（一）操作系统层
 
 
 
@@ -10,7 +10,7 @@
 
 手机屏幕实现触屏的原理大概有分为两种，电容屏和电阻屏；其中电容屏虽然价格更为昂贵，但精度更高，可实现多点触控，以及保护、清洁都更方便，因此也是主流的方案。
 
-![capacitor](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/capacitor.png)
+![capacitor](../../backups/iOSGesture/capacitor.png)
 
 电容屏的大概原理简单来说，整块屏幕就是一个大的电容器。根据中学物理知识，电容器实际上就是一个储存电荷的电子元件，人体也可以传导微弱的电流；当人的手指触碰到电容器，人的手指就会变成电容器的一极，部分的电荷就会从人的手指处流失，从而被屏幕探测到触摸动作。
 
@@ -20,7 +20,7 @@
 
 而 iPhone 采用的是投射电容（Projected-Capacitive）式电容屏，一共主要有四层，一层触摸层，两层导电层，和一层隔离层，大致结构如下：
 
-![ProjectedCapacitive](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/ProjectedCapacitive.png)
+![ProjectedCapacitive](../../backups/iOSGesture/ProjectedCapacitive.png)
 
 其中最上层透明的 touch surface 是触摸层，主要起保护作用，避免手指直接接触到下层结构。绿色 ITO 是导电玻璃层，中心黄色是绝缘层，这三层结构就构成了电容器。当手指触碰到触摸层时，就会产生电荷从电容器到人手指的转移，从而被屏幕捕获。
 
@@ -28,7 +28,7 @@
 
 而屏幕如何捕获具体的触摸坐标呢？实际上刚才说的两层 ITO 导电玻璃，分别负责探测触摸点的横纵坐标：
 
-![diamond](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/diamond.png)
+![diamond](../../backups/iOSGesture/diamond.png)
 
 参考上图，两层分别都按横纵方向分布有联锁钻石（Interlocking Diamonds）形状，分别负责探测触摸点的横纵坐标，两者结合之后可以计算出具体的触摸点坐标。
 
@@ -36,13 +36,13 @@
 
 其实看完上一小节，我们知道手机触摸屏对于系统内核来说，实际上就是一个外接的物理设备。而这个设备是如何与 CPU 连接起来的呢，这就要从计算机组成与 I/O 总线说起。在现代 CPU 架构中有一个总线（Bus）的概念，用于数据的传输：
 
-![](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/Bus.jpg)
+![](../../backups/iOSGesture/Bus.jpg)
 
 在物理层面上，总线可以被拆分为三条线路，分别是数据线（Data Bus）、地址线（Address Bus）和控制线（Control Bus）。分别用于数据的传输、地址的索引，以及具体传输操作的控制。在这样的结构支持下，总线连接的各个设备之间，通过”上下车“的机制，就能将需要数据在各个设备中传递。
 
 而在现代 CPU 的架构中，存在多个总线结构，主要包括系统总线、内存总线和 I/O 总线，整体结构大概如下所示：
 
-![](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/IOBus.jpg)
+![](../../backups/iOSGesture/IOBus.jpg)
 
 从图中可以看到，I/O 总线连接了各个设备，对于计算机来说就是诸如键盘鼠标、显示器、硬盘等；另一方面它与 I/O 桥接器（I/O Bridge）相连，就能完成设备与 CPU、内存的数据连通了。
 
@@ -58,7 +58,7 @@
 
 也因此可想而知，其实 I/O Kit 所处的位置应该位于系统较为底层的地方。对于 iOS 系统（以及 OS X）来说，如图所示，大概可以分为下面四层。其中操作系统核心 Darwin 包含内核和 UNIX shell 环境，I/O Kit 也位于其中。
 
-![](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/4layers.png)
+![](../../backups/iOSGesture/4layers.png)
 
 ### IOHIDFamily
 
@@ -98,7 +98,7 @@ dispatchDigitizerTouchEvent(uint64_t timeStamp, IOHIDDigitizerTouchData *touchDa
 
 所以总结一下，整个内核处理触屏的整个过程大概如图所示：
 
-![IOKit](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/IOKit.png)
+![IOKit](../../backups/iOSGesture/IOKit.png)
 
 
 
@@ -120,7 +120,7 @@ GSEvent 实际上是 GraphicsServices.framework 中关于 UI 事件的初步封�
 
 总体而言，上一小节最后提到的 IOHIDEvent 会被传递到 SpringBoard 中，在此之后就会由 SpringBoard 封装成 GSEvent 来分发给应用程序。具体过程可以参照下图：
 
-![SpringBoard](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/SpringBoard.png)
+![SpringBoard](../../backups/iOSGesture/SpringBoard.png)
 
 > 注：
 >
@@ -137,7 +137,7 @@ GSEvent 实际上是 GraphicsServices.framework 中关于 UI 事件的初步封�
 
 ### 主线程 Run Loop：Main Event Loop
 
-![main_event_loop](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/main_event_loop.png)
+![main_event_loop](../../backups/iOSGesture/main_event_loop.png)
 
 一般对于一个进程来说，一个线程一次只能对应一个任务，执行完成后线程就会退出。但这种单一事件的模式不适合系统对于手势的响应，这时候就需要 Event Loop 的模型，在 iOS 中就是 Run Loop。
 
@@ -145,7 +145,7 @@ GSEvent 实际上是 GraphicsServices.framework 中关于 UI 事件的初步封�
 
 在 app 中，每一个线程都会依附一个 Run Loop，而主线程的 Run Loop 就是所谓的 main event loop，而它的最主要特点之一在于它会接收并处理底层操作系统产生的触摸事件。底层触摸事件会被操作系统分发进入一个事件处理队列 Event queue，按照先进先出 FIFO 的规则被主线程 Run Loop 处理。
 
-![RunLoop](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/RunLoop.png)
+![RunLoop](../../backups/iOSGesture/RunLoop.png)
 
 一个 app 启动后，会开启主线程 Run Loop，之后触摸事件就会被 Run Loop 上的 input source 接收，之后 app 会将这个触摸事件转换成对应的对象，对于 iOS 是 UIEvent，而对于 OS X 是 NSEvent。
 
@@ -170,7 +170,7 @@ Run Loop 中的 CFRunLoopSourceRef 类负责触发事件，它有两个版本，
 - (id)_initWithEvent:(struct __GSEvent *)arg1 touches:(id)arg2;
 ```
 
-![MainRunLoop](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/MainRunLoop.png)
+![MainRunLoop](../../backups/iOSGesture/MainRunLoop.png)
 
 
 
@@ -180,13 +180,13 @@ UIApplication 是一个 iOS app 的核心，app 启动时系统就会调用 UIAp
 
 如下图所示，UIApplication 对象也负责管理 Main Event Loop，也就是前文第三步中负责接收系统消息的主线程 Run Loop，因此这里就是连接底层操作系统与上层 app 之间的枢纽。UIApplication 中也有一个 `sendEvent:`，负责将 UIEvent 事件分发传递给最合适的响应者，所有操作系统传递来的 UIEvent 触摸事件，都会通过这个方法进行分发调度。
 
-![UIApplication](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/UIApplication.png)
+![UIApplication](../../backups/iOSGesture/UIApplication.png)
 
 与此同时 UIApplication 也声明了一个协议 UIApplicationDelegate，当 app 接收到一些系统层级的重要 runtime 事件，比如启动、低内存提醒、app 中断、系统通知等，就会通知到相关的方法。以及 UIApplication 会要求 app 提供一个 UIWindow，作为所有视图层级的根节点。
 
 因此可以明确的看到 UIEvent 从系统底层传递给 app 的具体路径：UIApplication 在 app 启动时被创建，同时开启并管理了主线程 Run Loop，在触摸事件发生时接收 UIEvent 事件信息，调用 `sendEvent:` 方法，通过 UIApplicationDelegate 传递给根节点处的 UIWindow 以及下层其他的 UIView。
 
-![UIApplicationPipeline](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/UIApplicationPipeline.png)
+![UIApplicationPipeline](../../backups/iOSGesture/UIApplicationPipeline.png)
 
 
 
@@ -242,7 +242,7 @@ iOS 触摸事件从 UIApplication 向视图层级传递、触发到最终响应�
 1. 事件传递：由 UIApplication 向上层视图传递，找到符合条件的最上层 view
 2. 寻找最佳响应者：沿着响应链，从最上层视图开始，找到能够响应手势的最上层 view
 
-![responderChain](/Users/rickey/Desktop/Swift/Rickey-iOS-Notes/backups/iOSGesture/responderChain.png)
+![responderChain](../../backups/iOSGesture/responderChain.png)
 
 
 
