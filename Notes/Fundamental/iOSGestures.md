@@ -1,8 +1,12 @@
 # iOS 中的手势传递（一）操作系统层
 
+这是一篇在草稿箱里存了很久的文章，本来想写一个大而全的手势文章，可惜迟迟没有完结，索性还是先把前面写好的部分发出来了。
+
+通常我们处理手势是在 UIView 层级，直接使用 UIButton、UIGestureRecognizer 等来捕获手势，而本文重点讲的是在此之前，手势识别与传递的过程，在介绍整个过程的同时，也能对整个操作系统的工作方式有一定的了解。
 
 
-# 第一步：I/O Kit
+
+## 第一步：I/O Kit
 
 ### 手机触屏原理
 
@@ -20,11 +24,13 @@
 
 而 iPhone 采用的是投射电容（Projected-Capacitive）式电容屏，一共主要有四层，一层触摸层，两层导电层，和一层隔离层，大致结构如下：
 
+> 比较旧的论文里的信息，如果有最新的欢迎留言交流~
+
 ![ProjectedCapacitive](../../backups/iOSGesture/ProjectedCapacitive.png)
 
 其中最上层透明的 touch surface 是触摸层，主要起保护作用，避免手指直接接触到下层结构。绿色 ITO 是导电玻璃层，中心黄色是绝缘层，这三层结构就构成了电容器。当手指触碰到触摸层时，就会产生电荷从电容器到人手指的转移，从而被屏幕捕获。
 
-> 注：有些时候除了这些结构，最下层还会有额外的一层 ITO 导电玻璃层，主要用于减少显示屏的噪声（LCD noise）。
+> 注：有些时候除了这些结构，最下层还会有额外的一层 ITO 导电玻璃层，主要用于减少显示屏的噪声（noise）。
 
 而屏幕如何捕获具体的触摸坐标呢？实际上刚才说的两层 ITO 导电玻璃，分别负责探测触摸点的横纵坐标：
 
@@ -102,23 +108,44 @@ dispatchDigitizerTouchEvent(uint64_t timeStamp, IOHIDDigitizerTouchData *touchDa
 
 
 
-# 第二步：SpringBoard
+## 第二步：backboardd
 
-### Mach 与 SpringBoard
+### SpringBoard 与 backboardd
 
-Mach 是 OS X 以及 iOS 中最核心的部分，仅处理最重要的任务，包括：进程和线程抽象、任务调度、进程间通讯和消息传递、虚拟内存管理。在 Mach 中，消息会在两个端口 Port 之间传递，对象之间通过各自注册、负责端口，再通过端口传递消息来完成相互之间的通信。
+Daemons 程序是 iOS/OS X 操作系统内的核心程序，这类程序始终在后台运行，通常拥有更长的生命周期。
 
-SpringBoard 是 iOS 系统内一个特殊的守护程序（Daemon），主要负责 iOS 设备的 UI 支持。当系统启动后，它会启动一个图形 Shell 环境，支持丰富的 GUI，这在 OS X 上是 Finder，而在 iOS 上就是 SpringBoard。
+SpringBoard 是 iOS 系统内一个特殊的守护程序（Daemon），而 SpringBoard 主要负责 iOS 设备的 UI 支持。当系统启动后，它会启动一个图形 Shell 环境，支持丰富的 GUI，这在 OS X 上是 Finder，而在 iOS 上就是 SpringBoard。
 
 SpringBoard 主要职责是负责展示 UI，比如每次创建 GUI 时 SpringBoard 都会遍历 var/mobile/Applications 中的所有应用，然后创建对应的图标展示在主屏幕上。与此同时，SpringBoard 也会负责 iOS 中每个类型的操作，负责将 UI 事件分发到应用程序。而如果 SpringBoard 被暂停，任何 UI 操作都不会被分发到应用程序；如果 SpringBoard 超过几分钟不响应，系统将会被 watch dog 重启。
 
-### GSEvent
+SpringBoard 大家可能相对熟悉，不过从 iOS 6 开始，关于点击事件相关的任务被移交给了另一个 Daemon 程序负责：backboardd（也就是 BackBoard），backboardd 就负责点击事件从硬件到 app 之间的衔接。
 
-前文说到内核通信都通过 Mach 消息在 port 之间传递，SpringBoard 会要求注册不少的 port，其中最重要的是 PurpleSystemEventPort 这个端口，这个端口会接收硬件事件，然后通过封装、传递 GSEvent 消息来传递 UI 事件。SpringBoard 主线程会维护一个 CFRunloop 循环运行来响应、分发这些 UI 事件，而触屏事件就会在这儿被处理，其他的事件还包括像开机、锁屏、音量键、设备 orientation 改变等事件，具体事件列表可以参考 [GSEvent](https://iphonedevwiki.net/index.php/GSEvent)。
+当然 backboardd 和 SpringBoard 也会有相互通信的能力，通过 BackBoardServices.framework 简单封装就可以互相通信。
+
+### backboardd 接收事件
+
+Mach 是 OS X 以及 iOS 中最核心的部分，仅处理最重要的任务，包括：进程和线程抽象、任务调度、进程间通讯和消息传递、虚拟内存管理。在 Mach 中，消息会在两个端口 Port 之间传递，对象之间通过各自注册、负责端口，再通过端口传递消息来完成相互之间的通信。
+
+内核通信都通过 Mach 消息在 port 之间传递，这部分能力主要由 SpringBoard 提供，SpringBoard 会要求注册不少的 port，其中最重要的是 PurpleSystemEventPort 这个端口，这个端口会接收硬件事件。
+
+SpringBoard 可以接收来自 I/OKit 的消息，而接收形式就是前文提到的 IOHIDEvent。IOHIDEvent 一共定义了 20 种事件，而 SpringBoard 只接收其中的 4 种：
+
+- keyboard：对于 iOS 设备来说，这个事件对应的不完全对应键盘输入，而是按钮事件，比如：静音按钮、锁屏按钮、音量键等。
+- digitizer：包含上文提到的触屏事件
+- accelerometer：加速计事件，包含转屏事件
+- proximity：距离事件，通常是需要搭配蓝牙设备，当距离小于一定程度是触发事件，从而实现一些类似于自动解锁之类的功能。
+
+而当 SpringBoard 通过 port 接收到消息之后，会进一步通知到 backboardd，由 backboardd 来进行封装和分发。
+
+### backboardd 分发事件
+
+backboardd 接收到消息后，会将事件封装为 GSEvent，然后通过传递 GSEvent 来传递 UI 事件。这里的 GSEvent 当然也不只包含触摸事件，也包含上一小节提到的按钮、加速计等事件，具体可以参考 [GSEvent](https://iphonedevwiki.net/index.php/GSEvent) 事件列表。
+
+在封装时，backboardd 也会负责获取到当前的进程，从而实现将手势直接分发给目标 app 进程。
 
 GSEvent 实际上是 GraphicsServices.framework 中关于 UI 事件的初步封装，也是 UIEvent 的基础。一个 GSEvent 会包含下面这些信息：事件的类别、事件的触发位置和时间、触发事件的进程，以及应该接受 GSEvent 的进程。
 
-总体而言，上一小节最后提到的 IOHIDEvent 会被传递到 SpringBoard 中，在此之后就会由 SpringBoard 封装成 GSEvent 来分发给应用程序。具体过程可以参照下图：
+总体而言，上一小节最后提到的 IOHIDEvent 会被传递到 backboardd 中，在此之后就会由 backboardd 封装成 GSEvent 来分发给应用程序。具体过程可以参照下图：
 
 ![SpringBoard](../../backups/iOSGesture/SpringBoard.png)
 
@@ -133,9 +160,9 @@ GSEvent 实际上是 GraphicsServices.framework 中关于 UI 事件的初步封�
 
 
 
-# 第三步：Run Loop
+## 第三步：Run Loop
 
-### 主线程 Run Loop：Main Event Loop
+### RunLoop 机制
 
 ![main_event_loop](../../backups/iOSGesture/main_event_loop.png)
 
@@ -153,16 +180,20 @@ GSEvent 实际上是 GraphicsServices.framework 中关于 UI 事件的初步封�
 
 而主线程 Run Loop 和其他线程 Run Loop 的最主要区别之一就是，主线程 Run Loop 上的 input source 可以接收操作系统检测并生成的交互操作（比如点击 View 或者使用键盘）。
 
-### Run Loop 监听手势
+### Run Loop 监听事件
 
 Run Loop 中的 CFRunLoopSourceRef 类负责触发事件，它有两个版本，Source0 和 Source1：
 
 * Source0 包含一个回调函数（实际上是一个指针），负责通过回调函数向应用层传递事件。它并不能主动触发事件，Source0 被标记后需要唤醒 RunLoop 才能处理这个事件。
 * Source1 同样包含一个回调函数（指针），同时也包含一个 mach port 端口。由于内核通信都通过 Mach 消息在 port 之间传递，所以 Source1 会负责接收内核的事件，同时通过回调函数唤醒 Run Loop。
 
-因此具体大概发生了什么我们就清楚了，查看源码之后发现系统会为主线程 Run Loop 注册一个 RunLoopSource（基于 mach port 的 Source1） 来接收前文提到的 GSEvent。而这个 Source1 的回调函数为 `_UIApplicationHandleEventQueue()`。
+如果我们给 Xcode 添加一个` __IOHIDEventSystemClientQueueCallback` 的符号断点，我们就可以发现一些端倪：
 
-当主线程 Run Loop 接收到 SpringBoard 发送的 GSEvent 时，会在 `_UIApplicationHandleEventQueue()` 这个回调中将 GSEvent 包装转化成 UIEvent，由 Source0 进行处理和分发，进而触发后续一系列我们熟知的流程。
+![eventfetcher](../../backups/iOSGesture/eventfetcher.png)
+
+实际上，app 启动后会开启一个 com.apple.uikit.eventfetch-thread 的子线程，这个子线程会注册一个 source1，用于接收来自 backboardd 的 GSEvent 事件。而他的回调函数名字就是：`__IOHIDEventSystemClientQueueCallback`。
+
+而主线程 RunLoop 中注册了一个 source0 事件，其回调函数就是 `__eventQueueSourceCallback`，这个函数会负责将 GSEvent 包装转化成 UIEvent，成为后续一系列我们熟知的流程的基础。
 
 当我们窥探 UIKitCore 的私有头文件，找到 UIEvent.h（[xybp888/iOS-Header - UIEvent.h](https://github.com/xybp888/iOS-Header/blob/master/13.0/PrivateFrameworks/UIKitCore.framework/UIEvent.h)）时，我们不难发现 UIEvent 中有一个初始化方法，也能佐证 GSEvent 与 UIEvent 之间的关系：
 
@@ -170,11 +201,13 @@ Run Loop 中的 CFRunLoopSourceRef 类负责触发事件，它有两个版本，
 - (id)_initWithEvent:(struct __GSEvent *)arg1 touches:(id)arg2;
 ```
 
+因此整个流程就较为清楚了，backboardd 会将 GSEvent 通过特定 port 通知到当前 app 进程的 eventfetch-thread 子线程（source1），而 eventfetch-thread 会将主线程 RunLoop 中的 source0 事件标记为 pending 状态。而此 source0 负责 UIEvent 的封装与分发。
+
 ![MainRunLoop](../../backups/iOSGesture/MainRunLoop.png)
 
 
 
-# 第四步：UIApplication
+## 第四步：UIApplication
 
 UIApplication 是一个 iOS app 的核心，app 启动时系统就会调用 UIApplicationMain 方法，从而创建一个 UIApplication 的单例（这也是第一个被创建的对象）。这个单例对象会处理最初的用户事件，分发消息，以及管理 UIView 视图层级。
 
@@ -190,197 +223,28 @@ UIApplication 是一个 iOS app 的核心，app 启动时系统就会调用 UIAp
 
 
 
+## 第五步：App 内的事件传递
 
+这部分就到了大家熟悉的阶段了，本文也就先到此为止了~
 
-# 第五步：Responder Chain
-
-### UIEvent、UITouch、UIResponder、UIGestureRecognizer
-
-接下来进入到我们相对熟悉的阶段了，即手势事件在 app 内部流通的阶段。那么我们先区分一下几个常见的概念：
-
-**UITouch**
-
-> [UITouch | Apple](https://developer.apple.com/documentation/uikit/uitouch?language=objc)
-
-顾名思义，UITouch 对应一个手指的触摸信息。每一个 UITouch 对象会包含下列信息：
-
-- 触摸发生的 view 或者 window
-- 触摸在 view 或 window 中相对的位置
-- 触摸半径（近似）
-- 触摸的力度（需要设备支持 3D Touch 或者 Apple Pencil）
-- 触摸的时间点
-- 触摸的进行阶段（began、moved、ended、canceded）
-
-**UIEvent**
-
-> [UIEvent | Apple](https://developer.apple.com/documentation/uikit/uievent?language=objc)
-
-UIEvent 对象包含了单个用户的交互操作信息，不只是触摸事件，还有其他比如锁屏、音量、远程控制等系统事件。而触摸事件是其中最常见的事件。对于触摸事件，每个 UIEvent 都包含一个或多个触摸信息（即包含一个或多个 UITouch 对象）。
-
-需要注意的是，当多个连续触摸事件发生时，UIKit 会重复使用同一个 UIEvent 对象来分发不断更新的触摸信息，因此不应该强持有 UIEvent（以及 UITouch），如果需要记录其数据只能进行先复制。
-
-**UIResponder**
-
-> [UIResponder | Apple](https://developer.apple.com/documentation/uikit/uiresponder?language=objc)
-
-UIResponder 是用于进行事件响应的抽象接口，而 UIResponder 对象包含绝大多数主要的类比如 UIApplication、UIViewController、UIView（包含 UIWindow）。当事件发生，即新的 UIEvent 信息由底层传递而来，这些对象能够通过 UIKit 实现对事件的监听和处理。
-
-**UIGestureRecognizer**
-
-> [UIGestureRecognizer](https://developer.apple.com/documentation/uikit/uigesturerecognizer?language=objc)
-
-UIGestureRecognizer 是承载具体手势的基类。UITouch 和 UIEvent 等已经包含了足够多开发过程中需要的信息，但是这些信息过于丰富和离散，因此 UIGestureRecognizer 出现的主要目的就是进行逻辑的解耦：当有连续或独立的触摸事件发生时，UIGestureRecognizer 会根据 UITouch 中的信息进行初步判断，将手势分类、封装。
-
-识别出来的手势会被封装为不同的手势识别类（比如 [UITapGestureRecognizer](https://developer.apple.com/documentation/uikit/uitapgesturerecognizer?language=objc) 单击手势类），这些手势类的基类就是 UIGestureRecognizer。
-
-### 响应链
-
-> 因为响应链太熟悉了，所以这里只是快速过一下
-
-iOS 触摸事件从 UIApplication 向视图层级传递、触发到最终响应，主要会经历下面两个步骤：
-
-1. 事件传递：由 UIApplication 向上层视图传递，找到符合条件的最上层 view
-2. 寻找最佳响应者：沿着响应链，从最上层视图开始，找到能够响应手势的最上层 view
-
-![responderChain](../../backups/iOSGesture/responderChain.png)
+最后，本文中有不少细节网上的资料相对较少，如果大家有更深入的了解，欢迎留言交流。
 
 
 
-
-
-
-
----
-
-### 参考文献
+## 参考文献
 
 - [计算机组成原理——原理篇 IO（上）- 小萝卜鸭](https://www.cnblogs.com/wwj99/p/12852344.html)
 - [Projected-Capacitive Touch Technology](http://large.stanford.edu/courses/2012/ph250/lee2/docs/art6.pdf)
 - [Apple - IOKit-fundamentals](https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Introduction/Introduction.html)
 - [Apple - IOKit Fundamentals - I/O Kit Family Reference](https://developer.apple.com/library/archive/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Families_Ref/Families_Ref.html#//apple_ref/doc/uid/TP0000021-BABCCBIJ)
-- [PhoneWiki - IOHIDFamily](http://iphonedevwiki.net/index.php/IOHIDFamily)
+- [PhoneWiki - IOHIDFamily](https://iphonedev.wiki/index.php/IOHIDFamily)
 - [深入浅出iOS系统内核（1）— 系统架构 — darcy87)](https://www.jianshu.com/p/029cc1b039d6)
 - [PhoneWiki - GSEvent](https://iphonedevwiki.net/index.php/GSEvent)
+- [PhoneWiki - backboardd](https://iphonedev.wiki/index.php/Backboardd)
 - [Chapter 4. Event Handling and Graphics Services](https://www.oreilly.com/library/view/iphone-open-application/9780596155346/ch04.html)
 - [Apple - main event loop](https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/MainEventLoop.html)
 - [深入理解RunLoop - ibireme](https://blog.ibireme.com/2015/05/18/runloop/)
 - [xybp888/iOS-Header - UIEvent.h](https://github.com/xybp888/iOS-Header/blob/master/13.0/PrivateFrameworks/UIKitCore.framework/UIEvent.h)
 - [iOS App Life Cycle - Xiao Jiang](https://medium.com/@neroxiao/ios-app-life-cycle-ec1b31cee9dc#:~:text=The%20Main%20Run%20Loop,on%20the%20app's%20main%20thread.)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### 重要参考
-iOS触摸事件全家桶 https://juejin.im/entry/59a7b6e4f265da246f381d37#comment
-iOS Touch Event from the inside out https://www.jianshu.com/p/70ba981317b6
-iOS 中的事件响应与处理 https://blog.boolchow.com/2018/03/25/iOS-Event-Response/
-深入理解RunLoop https://blog.ibireme.com/2015/05/18/runloop/
-main event loop - Apple https://developer.apple.com/library/archive/documentation/General/Conceptual/Devpedia-CocoaApp/MainEventLoop.html
-Stackoverflow 关于 Gesture 传递过程!!!：https://stackoverflow.com/questions/22116698/does-uiapplication-sendevent-execute-in-a-nsrunloop
-
-
-
----
-
-[手势管理方案！！ - Rickey]
-
-
-https://alanli7991.github.io/2017/05/20/Gesture%E5%92%8CUIControl%E8%A7%A6%E5%8F%91%E9%A1%BA%E5%BA%8F/
-
-or: 
-
-```
-[self.buttonGroupView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(p_blockGesture)]]; // 隔离 button 与底层的手势
-```
-
-
-
-UIView的hitTest和pointInside方法 https://www.jianshu.com/p/c87de31b3985
-
-
-
-### SpringBoard.app
-
-答案是 SpringBoard.app，它接收到封装好的 IOHIDEvent 对象，经过逻辑判断后做进一步的调度分发。例如，它会判断前台是否运行有应用程序，有则将封装好的事件采用 mach port 机制传递给该应用的主线程。
-
-Port 机制在 IPC 中的应用是 Mach 与其他传统内核的区别之一，在 Mach 中，用户进程调用内核交由 IPC 系统。与直接系统调用不同，用户进程首先向内核申请一个 port 的访问许可；然后利用 IPC 机制向这个 port 发送消息，本质还是系统调用，而处理是交由其他进程完成的。
-
-
-
-
-### 手势冲突与处理
-
-
-
-
-### 事件的生命周期
-
-系统响应、进程响应 、事件传递
-
-1. IOKit、spring board
-2. 进程
-3. runloop source
-4. UIwindow
-5. GestureRecognizer & HitTest
-
-
-
-
-
----
-
-
-
-[iOS Touch Event from the inside out](https://www.jianshu.com/p/70ba981317b6)
-
----
-
-[iOS 触摸事件全家桶 - 掘金](https://juejin.im/entry/59a7b6e4f265da246f381d37)
-
-- 触摸事件由触屏生成后如何传递到当前应用？<事件的生命周期>
-- 应用接收触摸事件后如何寻找最佳响应者？实现原理？
-- 触摸事件如何沿着响应链流动？
-- 响应链、手势识别器、UIControl之间对于触摸事件的响应有着什么样的瓜葛？
-
-[处理手势冲突和错乱的一些经验](http://yulingtianxia.com/blog/2016/08/29/Some-Experience-of-Gesture/)
-
-[各种点击事件的关系](https://juejin.im/post/5bd142fdf265da0a8b576417)
-
-[黄文臣-七种手势详解](https://blog.csdn.net/Hello_Hwc/article/details/44044225)
-
-
-
+- [iOS 从源码解析Run Loop (九) ](https://juejin.cn/post/6913094534037504014)
+- [iOS RunLoop应用分析—原来这些都在使用RunLoop](https://juejin.cn/post/7056282331132198919)
