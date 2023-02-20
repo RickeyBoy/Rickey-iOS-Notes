@@ -1,10 +1,6 @@
 # SwiftUI - 获取目标视图 Frame
 
-### 便捷版
-
-
-
-
+> 太长不看版，代码实现：[FrameGetter](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/FrameGetterExtension.swift)
 
 ### 需要获取 Frame 的场景
 
@@ -124,7 +120,7 @@ struct MyView: View {
 
     var body: some View {
         Rectangle()
-		      .frameGetter($frame)
+            .frameGetter($frame)
     }
 }
 ```
