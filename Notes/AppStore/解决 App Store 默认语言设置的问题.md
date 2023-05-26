@@ -26,7 +26,7 @@
 
 如果上一步中成功增加了新的语言，那么在 **knownRegions** 处就能找到对应的。
 
-![shot_590](/Users/timo.wang/Pictures/SnapNDrag Library.snapndraglibrary/1074c4d720-e5/shot_590.png)
+![shot_590](../../backups/AppStoreLanguages/shot_590.png)
 
 
 
