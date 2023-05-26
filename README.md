@@ -21,6 +21,10 @@
 - [SwiftUI - 获取目标视图 Frame](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/SwiftUI%20-%20%E8%8E%B7%E5%8F%96%E7%9B%AE%E6%A0%87%E8%A7%86%E5%9B%BE%20Frame.md)
 - [SwiftUI - 点击空白处收起键盘](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/SwiftUI%20%E7%82%B9%E5%87%BB%E7%A9%BA%E7%99%BD%E5%A4%84%E6%94%B6%E8%B5%B7%E9%94%AE%E7%9B%98.md)
 
+### App Store 上架
+
+- [解决 App Store 默认语言设置的问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/%E8%A7%A3%E5%86%B3%20App%20Store%20%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80%E8%AE%BE%E7%BD%AE%E7%9A%84%E9%97%AE%E9%A2%98.md)
+
 ### 深度解析
 
 - [iOS 中的手势传递（一）操作系统层](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Fundamental/iOSGestures.md)
