@@ -24,7 +24,11 @@
 
 ### SwiftUI 自定义截图组件
 
-- [SwiftUI 轻量级自定义截图组件（使用篇）](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/SwiftUI%20%E8%BD%BB%E9%87%8F%E7%BA%A7%E8%87%AA%E5%AE%9A%E4%B9%89%E6%88%AA%E5%9B%BE%E7%BB%84%E4%BB%B6.md)
+- 🎬 [SwiftUI 轻量级自定义截图组件（使用篇）](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/SwiftUI%20%E8%BD%BB%E9%87%8F%E7%BA%A7%E8%87%AA%E5%AE%9A%E4%B9%89%E6%88%AA%E5%9B%BE%E7%BB%84%E4%BB%B6.md)
+
+### iColors 独立开发教学
+
+- 🌏 [独立开发之 App 国际化全步骤](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/App%20%E5%9B%BD%E9%99%85%E5%8C%96%E5%85%A8%E6%AD%A5%E9%AA%A4.md)
 
 ### SwiftUI 小技巧
 
@@ -44,7 +48,7 @@
 
 ## 📱 iOS 原理深度学习
 
-### 深度解析
+### 🔥 深度解析
 
 - [iOS 中的手势传递（一）操作系统层](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Fundamental/iOSGestures.md)
 - [iOS Rendering 渲染全解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Rendering.md)
