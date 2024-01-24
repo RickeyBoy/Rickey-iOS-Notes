@@ -75,6 +75,7 @@
 
 ### 疑难杂症记录
 
+- 🆕 [CFSocketInvalidate 多线程导致的 Crash 问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/CFSocketInvalidate%20%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AF%BC%E8%87%B4%E7%9A%84%20Crash%20%E9%97%AE%E9%A2%98.md)
 - [interactivePopGestureRecognizer 导致页面卡死](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/interactivePopGestureRecognizer%20导致页面卡死.md)
 
 ### 翻译计划
