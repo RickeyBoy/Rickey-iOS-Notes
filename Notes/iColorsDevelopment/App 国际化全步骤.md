@@ -599,7 +599,7 @@ Text("SOME_KEY")
 
 ![TranslateAppStrings7](../../backups/iColorsLocalization/TranslateAppStrings7.png)
 
-如图所示就可以了，两个正则表达式也很好理解，我直接贴在这里，供大家参考
+如图所示就可以了，两个正则表达式也很好理解，我直接贴在这里，供大家参考：
 
 ```swift
 // Text(LocalizedStringKey("SOME_KEY"))
