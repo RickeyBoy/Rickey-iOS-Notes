@@ -87,6 +87,12 @@
 
 
 
+## 🤖 AI 探索系列
+
+- 🔥 [Coze 实战：制作一个 Logo 生成器](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/AI/Coze%20实战：制作一个%20Logo%20生成器.md)
+
+
+
 ## 校招历史 & 有趣的小问题
 
 ### 校招面经
