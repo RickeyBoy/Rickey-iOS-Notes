@@ -11,16 +11,21 @@
 <img src="https://img.shields.io/badge/language-Swift-orange.svg">
 <img src="https://img.shields.io/badge/language-Objective--C-blue.svg">
 </p>
-
 我的笔记合集，记录我在 iOS 学习过程中的一些收获
+
+
+
+🥰 我的独立 App：
+
+- AppStore: 「[iColors - 设计灵感 配色助手](https://link.juejin.cn/?target=https%3A%2F%2Fapps.apple.com%2Fapp%2Fid6448422065)」
+
+- iColors 详细介绍：[iColors色彩灵感App: 精选配色，图片取色，还有免费四季型人测试！ ](https://www.douban.com/group/topic/302111433/)
 
 -------
 
 
 
 ##  独立开发系列
-
-> AppStore: 「[iColors - 设计灵感 配色助手](https://link.juejin.cn/?target=https%3A%2F%2Fapps.apple.com%2Fapp%2Fid6448422065)」
 
 ### SwiftUI 自定义截图组件
 
@@ -29,6 +34,7 @@
 ### iColors 独立开发教学
 
 - 🌏 [独立开发之 App 国际化全步骤](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/App%20%E5%9B%BD%E9%99%85%E5%8C%96%E5%85%A8%E6%AD%A5%E9%AA%A4.md)
+- [🎨 独立 App 适配深色模式](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/%E7%8B%AC%E7%AB%8B%20App%20%E9%80%82%E9%85%8D%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E9%80%82%E9%85%8D.md)
 
 ### SwiftUI 小技巧
 
