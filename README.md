@@ -34,7 +34,7 @@
 ### iColors 独立开发教学
 
 - 🌏 [独立开发之 App 国际化全步骤](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/App%20%E5%9B%BD%E9%99%85%E5%8C%96%E5%85%A8%E6%AD%A5%E9%AA%A4.md)
-- [🎨 独立 App 适配深色模式](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/%E7%8B%AC%E7%AB%8B%20App%20%E9%80%82%E9%85%8D%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E9%80%82%E9%85%8D.md)
+- [🎨 独立 App 适配深色模式](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/%E7%8B%AC%E7%AB%8B%20App%20%E9%80%82%E9%85%8D%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E9%80%82%E9%85%8D.md) （EN：[Independent App Adaptation to Dark Mode](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/Independent%20App%20Adaptation%20to%20Dark%20Mode.md)）
 
 ### SwiftUI 小技巧
 
