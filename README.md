@@ -48,6 +48,7 @@
 
 ### App Store 上架
 
+- [AppStore 上架解决 ITMS-91053 问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/AppStore/AppStore%20上架解决%20ITMS-91053%20问题.md)
 - [解决 App Store 默认语言设置的问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/AppStore/%E8%A7%A3%E5%86%B3%20App%20Store%20%E9%BB%98%E8%AE%A4%E8%AF%AD%E8%A8%80%E8%AE%BE%E7%BD%AE%E7%9A%84%E9%97%AE%E9%A2%98.md)
 
 
