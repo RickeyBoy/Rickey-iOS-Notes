@@ -1,4 +1,4 @@
-# iOS 上架解决 ITMS-91053 问题
+# AppStore 上架解决 ITMS-91053 问题
 
 
 
