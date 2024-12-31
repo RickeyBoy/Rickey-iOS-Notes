@@ -68,6 +68,7 @@
 
 ### 性能相关
 
+- 🆕🔥 [如何使用 Instruments 分析 Hangs](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Techniques/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Instruments%20%E5%88%86%E6%9E%90%20Hangs.md)
 - [UIView 动画降帧探究](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Techniques/UIViewPreferredFPS.md)
 
 ### 基础沉淀
@@ -84,7 +85,7 @@
 
 ### 疑难杂症记录
 
-- 🆕 [iOS PiP 小窗导致异常发热的问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/iOS%20PiP%20小窗导致异常发热的问题.md)
+- [iOS PiP 小窗导致异常发热的问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/iOS%20PiP%20小窗导致异常发热的问题.md)
 - [CFSocketInvalidate 多线程导致的 Crash 问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/CFSocketInvalidate%20%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AF%BC%E8%87%B4%E7%9A%84%20Crash%20%E9%97%AE%E9%A2%98.md)
 - [interactivePopGestureRecognizer 导致页面卡死](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/interactivePopGestureRecognizer%20导致页面卡死.md)
 
@@ -99,7 +100,7 @@
 
 ## 🤖 AI 探索系列
 
-- 🔥 [Coze 实战：制作一个 Logo 生成器](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/AI/Coze%20实战：制作一个%20Logo%20生成器.md)
+- [Coze 实战：制作一个 Logo 生成器](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/AI/Coze%20实战：制作一个%20Logo%20生成器.md)
 
 
 
