@@ -153,7 +153,14 @@
 
 ![19](../../backups/InstrumentHangs/19.png)
 
-当我们添加这个工具，然后再次运行后，我们就能看到具体造成 block 的关键位置：
+当我们添加这个工具，然后再次运行后，就能得到具体的数据了。当然，我们需要先设置一下查看主线程的 Thread States：
+
+- 先点击如图所示的小箭头
+- 然后选中 Thread States
+
+![22](../../backups/InstrumentHangs/22.png)
+
+这样就选中了展示各个线程的状态了，我们就能看到具体造成 block 的关键位置：
 
 - 查看 main thread，可以看到多了 block 的具体信息
 - 选中 block，看下房 Narrative 的那一栏，可以看到有一个 6.62s 的 block，源自于 `mach_msg2_trap`
