@@ -29,11 +29,14 @@
 
 ### SwiftUI 自定义截图组件
 
+仓库地址：[RickeyBoy/ScreenshotableView](https://github.com/RickeyBoy/ScreenshotableView)
+
 - 🎬 [SwiftUI 轻量级自定义截图组件（使用篇）](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/SwiftUI%20%E8%BD%BB%E9%87%8F%E7%BA%A7%E8%87%AA%E5%AE%9A%E4%B9%89%E6%88%AA%E5%9B%BE%E7%BB%84%E4%BB%B6.md)
 
 ### iColors 独立开发教学
 
-- 🌏 [独立开发之 App 国际化全步骤](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/App%20%E5%9B%BD%E9%99%85%E5%8C%96%E5%85%A8%E6%AD%A5%E9%AA%A4.md)
+- 🆕 [🗂️ 独立 App 包大小优化](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/独立%20App%20包大小优化.md)
+- [🌏 独立开发之 App 国际化全步骤](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/App%20%E5%9B%BD%E9%99%85%E5%8C%96%E5%85%A8%E6%AD%A5%E9%AA%A4.md)
 - [🎨 独立 App 适配深色模式](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/%E7%8B%AC%E7%AB%8B%20App%20%E9%80%82%E9%85%8D%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E9%80%82%E9%85%8D.md) （EN：[Independent App Adaptation to Dark Mode](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/Independent%20App%20Adaptation%20to%20Dark%20Mode.md)）
 - [☁️ 独立 App 使用阿里云 OSS 的基础配置](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/独立%20App%20使用阿里云%20OSS%20的基础配置.md)
 
