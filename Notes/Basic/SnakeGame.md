@@ -1,7 +1,5 @@
 # 从零到一开发贪吃蛇游戏
 
-
-
 本项目是用于 Swift 初学者的一个教学练习项目，我们最终的目的是基于 Swift 做出下面这样的一个贪吃蛇小游戏。
 
 完整 Demo 地址：[RickeyBoy/SnakeGame](https://github.com/RickeyBoy/SnakeGame)
