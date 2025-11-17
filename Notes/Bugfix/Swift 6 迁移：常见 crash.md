@@ -1,4 +1,4 @@
-# Swift 6 迁移 常见 crash _dispatch_assert_queue_fail
+# Swift 6 迁移常见 crash: _dispatch_assert_queue_fail
 
 最近在迁移到 Swift 6 的过程中，解决了好几个相似的 crash。关键字如下
 
