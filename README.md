@@ -1,16 +1,18 @@
-# Rickey 的笔记
+# Rickey 的笔记 | Rickey's Notes
 
 <p>
-<a href="https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&__biz=MzA5MTM1NTc2Ng==&scene=1&album_id=1406482220017369090&count=3#wechat_redirect"><img src="https://img.shields.io/badge/公众号-小吉的博客-green"></a>
-<a href="https://juejin.im/user/59c0ede76fb9a00a3d134e0b/posts"><img src="https://img.shields.io/badge/掘金-RickeyBoy-green"></a>
-<a href="https://xiaozhuanlan.com/u/rickeyboy"><img src="https://img.shields.io/badge/小专栏-RickeyBoy-green"></a>
+<a href="https://medium.com/@rickeyboy0318"><img src="https://img.shields.io/badge/Medium-RickeyBoy-12100E"></a>
+<a href="https://mp.weixin.qq.com/mp/appmsgalbum?action=getalbum&__biz=MzA5MTM1NTc2Ng==&scene=1&album_id=1406482220017369090&count=3#wechat_redirect"><img src="https://img.shields.io/badge/公众号-小吉的博客-07C160"></a>
+<a href="https://juejin.im/user/59c0ede76fb9a00a3d134e0b/posts"><img src="https://img.shields.io/badge/掘金-RickeyBoy-1E80FF"></a>
+<a href="https://xiaozhuanlan.com/u/rickeyboy"><img src="https://img.shields.io/badge/小专栏-RickeyBoy-FA7343"></a>
+</p>
+<p>
+<img src="https://img.shields.io/badge/platform-iOS-ff69b4.svg">
+<img src="https://img.shields.io/badge/language-SwiftUI-007AFF.svg">
+<img src="https://img.shields.io/badge/language-Swift-F05138.svg">
+<img src="https://img.shields.io/badge/language-Objective--C-438EFF.svg">
 </p>
 
-<p> 
-<img src="https://img.shields.io/badge/platform-iOS-ff69b4.svg">
-<img src="https://img.shields.io/badge/language-Swift-orange.svg">
-<img src="https://img.shields.io/badge/language-Objective--C-blue.svg">
-</p>
 我的笔记合集，记录我在 iOS 学习过程中的一些收获
 
 
