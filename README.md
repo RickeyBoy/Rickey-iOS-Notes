@@ -17,11 +17,13 @@
 
 
 
-🥰 我的独立 App：
+🥰 我的独立 App | My Independent App
 
 - AppStore: 「[iColors - 设计灵感 配色助手](https://link.juejin.cn/?target=https%3A%2F%2Fapps.apple.com%2Fapp%2Fid6448422065)」
 
 - iColors 详细介绍：[iColors色彩灵感App: 精选配色，图片取色，还有免费四季型人测试！ ](https://www.douban.com/group/topic/302111433/)
+
+- [Introducing iColors: Palette Inspirations, Color Picker & Color Analysis](https://medium.com/@rickeyboy0318/introducing-icolors-palette-inspirations-color-picker-color-analysis-ffbfdebf6701)
 
 -------
 
