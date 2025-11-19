@@ -25,7 +25,15 @@
 
 
 
-##  独立开发系列
+
+## 🚀 Modern SwiftUI Development
+
+- 🆕 [The Hidden Danger of @retroactive: Swift's Duplicate Conformance Trap](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/duplicate-protocol-conformances.md)
+- 🆕 [Swift 6 迁移常见 crash: _dispatch_assert_queue_fail](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/Swift%206%20%E8%BF%81%E7%A7%BB%EF%BC%9A%E5%B8%B8%E8%A7%81%20crash.md)
+
+
+
+##  独立开发系列 | Independent App
 
 ### SwiftUI 自定义截图组件
 
@@ -93,7 +101,6 @@
 
 ### 疑难杂症记录
 
-- 🆕 [Swift 6 迁移常见 crash: _dispatch_assert_queue_fail](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/Swift%206%20%E8%BF%81%E7%A7%BB%EF%BC%9A%E5%B8%B8%E8%A7%81%20crash.md)
 - [iOS PiP 小窗导致异常发热的问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/iOS%20PiP%20小窗导致异常发热的问题.md)
 - [CFSocketInvalidate 多线程导致的 Crash 问题](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/CFSocketInvalidate%20%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AF%BC%E8%87%B4%E7%9A%84%20Crash%20%E9%97%AE%E9%A2%98.md)
 - [interactivePopGestureRecognizer 导致页面卡死](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/interactivePopGestureRecognizer%20导致页面卡死.md)
