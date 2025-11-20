@@ -33,6 +33,7 @@
 ## 🚀 Modern SwiftUI Development
 
 - 🆕 [The Hidden Danger of @retroactive: Swift's Duplicate Conformance Trap](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/duplicate-protocol-conformances.md)
+- 🆕 [Swift6 @retroactive：Swift 的重复协议遵循陷阱](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/duplicate-protocol-conformances-zh.md)
 - 🆕 [Swift 6 迁移常见 crash: _dispatch_assert_queue_fail](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/Swift%206%20%E8%BF%81%E7%A7%BB%EF%BC%9A%E5%B8%B8%E8%A7%81%20crash.md)
 
 
