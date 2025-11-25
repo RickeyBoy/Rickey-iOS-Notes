@@ -195,18 +195,6 @@ public extension View {
 
 
 
-## Result
-
-User Experience: Back swipe works naturally on first page, content swiping works everywhere
-
-Code Quality: Reusable component in Core, clean SwiftUI API, no feature-specific coupling
-
-Maintainability: Other teams can use same pattern for similar problems
-
-<video src="../../backups/SwiftUIScrollGestureFix/success.mp4" controls=""></video>
-
-
-
 ## Usage
 
 Apply the `enableNavigationSwipeBack` modifier to any view with horizontal gestures that block the navigation back gesture.
@@ -234,4 +222,14 @@ TabView(selection: $selection) {
 **Note**: This solution requires [SwiftUIIntrospect](https://github.com/siteline/swiftui-introspect) library to access underlying UIKit views.
 
 
+
+## Result
+
+User Experience: Back swipe works naturally on first page, content swiping works everywhere
+
+Code Quality: Reusable component in Core, clean SwiftUI API, no feature-specific coupling
+
+Maintainability: Other teams can use same pattern for similar problems
+
+<video src="../../backups/SwiftUIScrollGestureFix/success.mp4" controls=""></video>
 
