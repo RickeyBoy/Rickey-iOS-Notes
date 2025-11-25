@@ -1,38 +1,36 @@
 # SwiftUI 手势冲突：修复 Navigation 返回手势
 
-## 问题描述
+## 问题背景
 
-现象：当用户在使用可横向翻页的视图（如 TabView 的 page 样式）时，处于第一页无法从屏幕边缘滑动返回上一页。
-
-返回手势总是被 TabView 的手势拦截。
+在开发过程中遇到一个体验上的冲突问题，当用户在使用可横向翻页的视图（如 TabView 的 page 样式）时，第一页无法从屏幕边缘滑动返回上一页。返回手势总是被 TabView 的手势拦截，具体表现可以看下面这个 gif 图：
 
 ![failure](../../backups/SwiftUIScrollGestureFix/failure.gif)
 
-## 根本原因分析
+## 原因分析
 
 #### 为什么会这样？
 
-  1. 两个手势在竞争：
+  1. 手势竞争问题：
 
     - Navigation Controller：提供边缘滑动返回手势
-    - 分页视图：拥有用于页面切换的横向拖动手势
+    - TabView：拥有用于页面切换的横向拖动手势
   2. 优先级冲突：
 
     - 两个手势都识别横向滑动
-    - 分页视图的手势先捕获触摸
+    - TabView 的手势先捕获触摸
     - Navigation 手势永远没有机会响应
 
-#### SwiftUI 的局限性：
+#### SwiftUI 的局限性
 
-SwiftUI 没有内置的方式来协调这些手势。必须深入到 UIKit 的 Gesture Recognizer 系统。
+SwiftUI 没有内置的方式来协调这些手势，解决冲突，所以我们必须深入到 UIKit，自行解决冲突。
 
-#### 如何解决：
-
-这个解决方案通过 UIKit 的 Delegate 模式进行手势协调。
+#### 如何解决
 
 关键点：在第一页时，我们需要两个手势同时激活，但响应不同的方向：
   - 向右滑动（从左边缘） → Navigation 返回手势
   - 向左滑动 → TabView 翻页
+
+当然，这个要实现上述的逻辑，需要通过 UIKit 来进行手势冲突的逻辑处理。
 
 
 
@@ -42,7 +40,7 @@ SwiftUI 没有内置的方式来协调这些手势。必须深入到 UIKit 的 G
 
 #### 步骤 1：识别手势
 
-找到两个冲突的手势：
+获取到互相冲突的两个手势：
 - **Navigation Gesture**：位于 `UINavigationController.interactivePopGestureRecognizer`
 - **Content Gesture**：位于可滚动内容上（如 UIScrollView.panGestureRecognizer）
 
@@ -61,8 +59,8 @@ SwiftUI 没有内置的方式来协调这些手势。必须深入到 UIKit 的 G
 
 #### 步骤 2：创建 Coordinator
 
-构建一个实现 `UIGestureRecognizerDelegate` 的 Coordinator：
-  - 存储两个手势的引用
+构建一个实现 `UIGestureRecognizerDelegate` 的 Coordinator，他的职责如下：
+  - 存储两个手势
   - 通过 Delegate 回调管理它们的交互
   - 处理生命周期（设置和清理）
 
@@ -87,11 +85,11 @@ public final class NavigationSwipeBackCoordinator: NSObject, UIGestureRecognizer
 }
 ```
 
-#### 步骤 3：启用同时识别
+#### 步骤 3：启用同时识别 RecognizeSimultaneously
 
 实现 `gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)`：
   - 当两个手势需要同时工作时返回 true
-  - 允许两者检测触摸而不会互相阻挡
+  - 允许两者检测触摸而不会互相拦截
 
 ```swift
 public func gestureRecognizer(
@@ -106,7 +104,7 @@ public func gestureRecognizer(
 #### 步骤 4：添加条件逻辑
 
 实现 `gestureRecognizerShouldBegin(_:)`：
-  - 检查当前状态（例如，"我在第一页吗？"）
+  - 检查当前状态（例如检查是否位于第一页）
   - 只在适当的时候允许 Navigation 手势
   - 在用户应该滚动内容时阻止返回手势
 
@@ -157,10 +155,10 @@ public extension View {
         modifier(NavigationSwipeBackModifier(shouldEnable: condition))
     }
 }
-
 // Usage
 .enableNavigationSwipeBack(when: { selectedIndex == 0 })
 ```
+
 
 
 ## 实现模式
@@ -219,10 +217,6 @@ TabView(selection: $selection) {
 
 ## 效果
 
-用户体验：在第一页时返回滑动自然流畅，内容滑动随处可用
-
-代码质量：可复用的核心组件，简洁的 SwiftUI API，无特定功能耦合
-
-可维护性：其他团队可以对类似问题使用相同模式
+当用户位于第一页时，自动允许边缘滑动返回手势
 
 ![success](../../backups/SwiftUIScrollGestureFix/success.gif)
