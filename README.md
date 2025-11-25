@@ -23,7 +23,7 @@
 
 - iColors 详细介绍：[iColors色彩灵感App: 精选配色，图片取色，还有免费四季型人测试！ ](https://www.douban.com/group/topic/302111433/)
 
-- [Introducing iColors: Palette Inspirations, Color Picker & Color Analysis](https://medium.com/@rickeyboy0318/introducing-icolors-palette-inspirations-color-picker-color-analysis-ffbfdebf6701)
+- 🇬🇧 [Introducing iColors: Palette Inspirations, Color Picker & Color Analysis](https://medium.com/@rickeyboy0318/introducing-icolors-palette-inspirations-color-picker-color-analysis-ffbfdebf6701)
 
 -------
 
@@ -32,7 +32,9 @@
 
 ## 🚀 Modern SwiftUI Development
 
-- 🆕 [The Hidden Danger of @retroactive: Swift's Duplicate Conformance Trap](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/duplicate-protocol-conformances.md)
+- 🆕 🇬🇧 [Fixing Navigation Back Gesture Conflicts in SwiftUI](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/Fixing%20Navigation%20Back%20Gesture%20Conflicts%20in%20SwiftUI.md)
+- 🆕 [SwiftUI 手势冲突：修复 Navigation 返回手势](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/SwiftUI%20%E6%89%8B%E5%8A%BF%E5%86%B2%E7%AA%81%EF%BC%9A%E4%BF%AE%E5%A4%8D%20Navigation%20%E8%BF%94%E5%9B%9E%E6%89%8B%E5%8A%BF.md)
+- 🆕 🇬🇧 [The Hidden Danger of @retroactive: Swift's Duplicate Conformance Trap](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/duplicate-protocol-conformances.md)
 - 🆕 [Swift6 @retroactive：Swift 的重复协议遵循陷阱](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/duplicate-protocol-conformances-zh.md)
 - 🆕 [Swift 6 迁移常见 crash: _dispatch_assert_queue_fail](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/Swift%206%20%E8%BF%81%E7%A7%BB%EF%BC%9A%E5%B8%B8%E8%A7%81%20crash.md)
 
@@ -55,8 +57,8 @@
 
 ### Independent App Development
 
-- 🆕 [🗂️ Practical Guide to Reducing the Size of an Independent App's Package](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/Practical%20Guide%20to%20Reducing%20the%20Size%20of%20an%20Independent%20App's%20Package.md)
-- [🎨 Independent App Adaptation to Dark Mode](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/Independent%20App%20Adaptation%20to%20Dark%20Mode.md)
+- 🆕 🇬🇧 [🗂️ Practical Guide to Reducing the Size of an Independent App's Package](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/Practical%20Guide%20to%20Reducing%20the%20Size%20of%20an%20Independent%20App's%20Package.md)
+- 🇬🇧 [🎨 Independent App Adaptation to Dark Mode](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/Independent%20App%20Adaptation%20to%20Dark%20Mode.md)
 
 ### SwiftUI 小技巧
 
