@@ -6,7 +6,7 @@ Symptom: Users cannot swipe back from the navigation edge when viewing a horizon
 
 The swipe back gesture will always be blocked by TabView gesture.
 
-<video src="../../backups/SwiftUIScrollGestureFix/failure.mov" controls=""></video>
+![failure](../../backups/SwiftUIScrollGestureFix/failure.gif)
 
 ## Root Cause Analysis
 
@@ -47,7 +47,6 @@ Find the two conflicting gestures:
 - **Content gesture**: Lives on the scrollable content (e.g., UIScrollView.panGestureRecognizer)
 
 ```swift
-// NavigationSwipeBackModifier.swift:129-141
 .introspect(.viewController, on: .iOS(.v16, .v17, .v18)) { viewController in
     guard let navigationController = viewController.navigationController,
           let interactivePopGesture = navigationController.interactivePopGestureRecognizer else {
@@ -68,7 +67,6 @@ Build a coordinator that implements `UIGestureRecognizerDelegate:`
   - Handles lifecycle (setup and cleanup)
 
 ```swift
-// NavigationSwipeBackModifier.swift:13-29
 public final class NavigationSwipeBackCoordinator: NSObject, UIGestureRecognizerDelegate {
     /// Closure that determines whether swipe-back should be enabled
     public var shouldEnableSwipeBack: (() -> Bool)?
@@ -96,7 +94,6 @@ Implement `gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:):`
   - Allows both to detect touches without blocking each other
 
 ```swift
-// NavigationSwipeBackModifier.swift:53-60
 public func gestureRecognizer(
     _: UIGestureRecognizer,
     shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
@@ -114,7 +111,6 @@ Implement `gestureRecognizerShouldBegin(_:):`
   - Block when user should scroll content instead
 
 ```swift
-// NavigationSwipeBackModifier.swift:66-80
 public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
     guard let panGesture = gestureRecognizer as? UIPanGestureRecognizer else {
         return true
@@ -139,7 +135,6 @@ public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognize
 - Teardown: Restore original state to avoid side effects
 
 ```swift
-// NavigationSwipeBackModifier.swift:41-48
 public func cleanup() {
     interactivePopGesture?.delegate = originalDelegate
     interactivePopGesture = nil
@@ -157,7 +152,6 @@ public func cleanup() {
   - Updates state reactively
 
 ```swift
-// NavigationSwipeBackModifier.swift:168-176
 public extension View {
     func enableNavigationSwipeBack(when condition: @escaping () -> Bool) -> some View {
         modifier(NavigationSwipeBackModifier(shouldEnable: condition))
@@ -231,5 +225,5 @@ Code Quality: Reusable component in Core, clean SwiftUI API, no feature-specific
 
 Maintainability: Other teams can use same pattern for similar problems
 
-<video src="../../backups/SwiftUIScrollGestureFix/success.mp4" controls=""></video>
+![success](../../backups/SwiftUIScrollGestureFix/success.gif)
 
