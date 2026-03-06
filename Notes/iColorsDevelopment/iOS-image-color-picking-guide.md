@@ -2,41 +2,6 @@
 
 > 本文从一个真实的取色 Bug 出发，系统梳理 iOS 图片取色所需的基础知识，包括色彩模型、色彩空间、位深度、像素格式、图片文件格式，以及业界主流的取色方案对比。
 
----
-
-## 目录
-
-- [起因：一个 Display P3 引发的取色 Bug](#起因一个-display-p3-引发的取色-bug)
-- [一、色彩模型](#一色彩模型)
-  - [1.1 RGB](#11-rgb)
-  - [1.2 HSB/HSV](#12-hsbhsv)
-  - [1.3 CIELAB](#13-cielab)
-- [二、色彩空间](#二色彩空间)
-  - [2.1 sRGB](#21-srgb)
-  - [2.2 Display P3](#22-display-p3)
-  - [2.3 Adobe RGB](#23-adobe-rgb)
-  - [2.4 ProPhoto RGB](#24-prophoto-rgb)
-- [三、位深度](#三位深度)
-- [四、像素格式](#四像素格式)
-  - [4.1 CGImage 的关键属性](#41-cgimage-的关键属性)
-  - [4.2 RGBA vs BGRA](#42-rgba-vs-bgra)
-  - [4.3 预乘 Alpha](#43-预乘-alphapremultiplied-alpha)
-  - [4.4 CGBitmapContext 支持的格式组合](#44-cgbitmapcontext-支持的格式组合)
-- [五、图片文件格式](#五图片文件格式)
-  - [5.1 JPEG](#51-jpeg)
-  - [5.2 PNG](#52-png)
-  - [5.3 HEIF/HEIC](#53-heifheic)
-- [六、iOS 取色方案对比](#六ios-取色方案对比)
-  - [方案 A：dataProvider 直接读原始数据](#方案-adataprovider-直接读原始数据)
-  - [方案 B：CGContext 重绘（推荐）](#方案-bcgcontext-重绘推荐)
-  - [方案 C：Core Image](#方案-ccore-image)
-  - [方案 D：vImage（Accelerate 框架）](#方案-dvimageaccelerate-框架)
-- [七、工程实践：PixelReader 缓存方案](#七工程实践pixelreader-缓存方案)
-- [八、取色常见坑点](#八取色常见坑点)
-- [参考资料](#参考资料)
-
----
-
 ## 起因：一个 Display P3 引发的取色 Bug
 
 在开发一个取色功能时，遇到了一个诡异的问题：用户用 iPhone 拍照后进行取色，得到的颜色跟肉眼看到的完全不一样。

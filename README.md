@@ -88,10 +88,11 @@
 - [iOS 中的手势传递（一）操作系统层](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Fundamental/iOSGestures.md)
 - [iOS Rendering 渲染全解析](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Rendering.md)
 - [iOS Memory 内存详解](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/笔记/iOS%20Memory.md)
+- [🆕 iOS 图片取色完全指南：从像素格式到工程实践](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/iOS-image-color-picking-guide.md)
 
 ### 性能相关
 
-- 🆕🔥 [如何使用 Instruments 分析 Hangs](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Techniques/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Instruments%20%E5%88%86%E6%9E%90%20Hangs.md)
+- [如何使用 Instruments 分析 Hangs](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Techniques/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%20Instruments%20%E5%88%86%E6%9E%90%20Hangs.md)
 - [UIView 动画降帧探究](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Techniques/UIViewPreferredFPS.md)
 
 ### 基础沉淀
