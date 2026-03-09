@@ -36,7 +36,13 @@
 - 🆕 [SwiftUI 手势冲突：修复 Navigation 返回手势](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/SwiftUI%20%E6%89%8B%E5%8A%BF%E5%86%B2%E7%AA%81%EF%BC%9A%E4%BF%AE%E5%A4%8D%E5%AF%BC%E8%88%AA%E8%BF%94%E5%9B%9E%E6%89%8B%E5%8A%BF.md)
 - 🆕 🇬🇧 [The Hidden Danger of @retroactive: Swift's Duplicate Conformance Trap](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/duplicate-protocol-conformances.md)
 - 🆕 [Swift6 @retroactive：Swift 的重复协议遵循陷阱](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/duplicate-protocol-conformances-zh.md)
-- 🆕 [Swift 6 迁移常见 crash: _dispatch_assert_queue_fail](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/Swift%206%20%E8%BF%81%E7%A7%BB%EF%BC%9A%E5%B8%B8%E8%A7%81%20crash.md)
+- [Swift 6 迁移常见 crash: _dispatch_assert_queue_fail](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/Bugfix/Swift%206%20%E8%BF%81%E7%A7%BB%EF%BC%9A%E5%B8%B8%E8%A7%81%20crash.md)
+
+
+
+## 🤖 My AI Workflow
+
+- 🆕 [Git Worktree / Worktrunk：并行 AI 开发工作流实战](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/AI/claude_worktree_workflow.md)
 
 
 
