@@ -60,6 +60,7 @@
 - [🌏 独立开发之 App 国际化全步骤](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/App%20%E5%9B%BD%E9%99%85%E5%8C%96%E5%85%A8%E6%AD%A5%E9%AA%A4.md)
 - [🎨 独立 App 适配深色模式](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/%E7%8B%AC%E7%AB%8B%20App%20%E9%80%82%E9%85%8D%E6%B7%B1%E8%89%B2%E6%A8%A1%E5%BC%8F%E9%80%82%E9%85%8D.md)
 - [☁️ 独立 App 使用阿里云 OSS 的基础配置](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/独立%20App%20使用阿里云%20OSS%20的基础配置.md)
+- [☁️ 独立 App 配置阿里云 CDN 记录](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/iColorsDevelopment/%E7%8B%AC%E7%AB%8B%20App%20%E9%85%8D%E7%BD%AE%E9%98%BF%E9%87%8C%E4%BA%91%20CDN%20%E8%AE%B0%E5%BD%95.md)
 
 ### Independent App Development
 
