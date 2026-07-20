@@ -44,7 +44,8 @@
 
 ### 💡 面试题
 
-- 🆕 [SwiftUI 如何实现 Infinite Scroll？](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/infinite-scroll-best-practices.md)
+- 🆕 [只靠 cancel 还不够：搜索分页里的 Latest-Wins 陷阱](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/%E5%8F%AA%E9%9D%A0%20cancel%20%E8%BF%98%E4%B8%8D%E5%A4%9F-%E6%90%9C%E7%B4%A2%E5%88%86%E9%A1%B5%E7%9A%84%20Latest-Wins.md)
+- [SwiftUI 如何实现 Infinite Scroll？](https://github.com/RickeyBoy/Rickey-iOS-Notes/blob/master/Notes/SwiftUI/infinite-scroll-best-practices.md)
 
 
 
